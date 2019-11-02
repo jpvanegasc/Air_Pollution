@@ -3,22 +3,27 @@
 
 const int cube = 64;
 const int Lx = cube, Ly = cube, Lz = cube;
-const int Q = 19;
+const int D = 3, Q = 19;
 
 const double tau = 0.55, Utau = 1.0/tau, UmUtau = 1-Utau;
 
 class LatticeBoltzmann{
     private:
-        double w[Q]; int V[3][Q];
+        double w[Q]; int V[D][Q];
         double *f = NULL,   *f_new = NULL;
     public:
         LatticeBoltzmann(void);
         ~LatticeBoltzmann(void);
-        // macro
-        double rho(void);
-        double Jx(void);
-        double Jy(void);
-        double f_eq(void);
+        // density
+        double rho(int ix, int iy, int iz);
+        // U_x * rho
+        double Jx(int ix, int iy, int iz);
+        // U_y * rho
+        double Jy(int ix, int iy, int iz);
+        // U_z * rho
+        double Jz(int ix, int iy, int iz);
+        // eq function for fluids
+        double f_eq(double rho0, double Ux0, double Uy0, double Uz0, int i);
         void collide(void);
         void propagate(void);
         void initialize(void);
@@ -57,18 +62,56 @@ LatticeBoltzmann::~LatticeBoltzmann(void){
     delete[] f; delete[] f_new;
 }
 
-double LatticeBoltzmann::rho(void){
-    return 0;
+double LatticeBoltzmann::rho(int ix, int iy, int iz){
+    double rho = 0; int pos = ix+iy+iz;
+    for(int i=0; i<Q; i++){
+        rho += f[pos+i];
+    }
+    return rho;
 }
 
-double LatticeBoltzmann::Jx(void){
-    return 0;
+double LatticeBoltzmann::Jx(int ix, int iy, int iz){
+    double J_x = 0; int pos = ix+iy+iz;
+    for(int i=0; i<Q; i++){
+        J_x += f[pos+i] * V[0][i];
+    }
+    return J_x;
 }
 
-double LatticeBoltzmann::Jy(void){
-    return 0;
+double LatticeBoltzmann::Jy(int ix, int iy, int iz){
+    double J_y = 0; int pos = ix+iy+iz;
+    for(int j=0; j<Q; j++){
+        J_y += f[pos+j] * V[1][j];
+    }
+    return J_y;
 }
 
-double LatticeBoltzmann::f_eq(void){
-    return 0;
+double LatticeBoltzmann::Jz(int ix, int iy, int iz){
+    double J_z = 0; int pos = ix+iy+iz;
+    for(int k=0; k<Q; k++){
+        J_z += f[pos+k] * V[2][k];
+    }
+    return J_z;
+}
+
+double LatticeBoltzmann::f_eq(double rho0, double Ux0, double Uy0, double Uz0, int i){
+    double UdotVi = Ux0*V[0][i] + Uy0*V[1][i] + Uz0*V[2][i];
+    double U2 = Ux0*Ux0 + Uy0*Uy0 + Uz0*Uz0;
+    return rho0*w[i]*(1 + 3*UdotVi + 4.5*UdotVi*UdotVi - 1.5*U2);
+}
+
+void LatticeBoltzmann::collide(void){
+    int nada = 0;
+}
+
+void LatticeBoltzmann::propagate(void){
+    int nada = 0;
+}
+
+void LatticeBoltzmann::initialize(void){
+    int nada = 0;
+}
+
+void LatticeBoltzmann::impose_fields(void){
+    int nada = 0;
 }
