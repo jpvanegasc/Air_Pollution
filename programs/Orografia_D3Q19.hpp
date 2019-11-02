@@ -14,13 +14,17 @@ class LatticeBoltzmann{
     public:
         LatticeBoltzmann(void);
         ~LatticeBoltzmann(void);
+        // macro
+        double rho(void);
+        double Jx(void);
+        double Jy(void);
+        double f_eq(void);
+        void collide(void);
+        void propagate(void);
+        void initialize(void);
+        void impose_fields(void);
+        void test(void){ std::cout << "LB working ok" << std::endl;}
 };
-
-int main(void){
-    LatticeBoltzmann Bogota;
-
-    return 0;
-}
 
 LatticeBoltzmann::LatticeBoltzmann(void){
     // weights
@@ -51,4 +55,20 @@ LatticeBoltzmann::LatticeBoltzmann(void){
 
 LatticeBoltzmann::~LatticeBoltzmann(void){
     delete[] f; delete[] f_new;
+}
+
+double LatticeBoltzmann::rho(void){
+    return 0;
+}
+
+double LatticeBoltzmann::Jx(void){
+    return 0;
+}
+
+double LatticeBoltzmann::Jy(void){
+    return 0;
+}
+
+double LatticeBoltzmann::f_eq(void){
+    return 0;
 }
