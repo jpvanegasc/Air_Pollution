@@ -1,20 +1,19 @@
 #include<iostream>
 #include<cmath>
 
-const int Lx=64, Ly=64, Lz=64;
+const int cube = 64;
+const int Lx = cube, Ly = cube, Lz = cube;
+const int Q = 19;
 
-const int Q=19;
-
-const double tau=0.55;
-const double Utau=1.0/tau;
-const double UmUtau=1-Utau;
+const double tau = 0.55, Utau = 1.0/tau, UmUtau = 1-Utau;
 
 class LatticeBoltzmann{
     private:
-        double w[Q], f[Lx][Ly][Lz][Q], f_new[Lx][Ly][Lz][Q]; 
-        int V[3][Q];
+        double w[Q]; int V[3][Q];
+        double *f = NULL,   *f_new = NULL;
     public:
         LatticeBoltzmann(void);
+        ~LatticeBoltzmann(void);
 };
 
 int main(void){
@@ -45,4 +44,11 @@ LatticeBoltzmann::LatticeBoltzmann(void){
     V[0][13]=1;   V[0][14]=-1;  V[0][15]=1;   V[0][16]=-1;  V[0][17]=0;   V[0][18]=0;
     V[1][13]=-1;  V[1][14]=1;   V[1][15]=0;   V[1][16]=0;   V[1][17]=1;   V[1][18]=-1;
     V[0][13]=0;   V[2][14]=0;   V[2][15]=-1;  V[2][16]=1;   V[2][17]=-1;  V[2][18]=1;
+    // f and f_new
+    f = new double[Lx*Ly*Lz*Q];
+    f_new = new double[Lx*Ly*Lz*Q];
+}
+
+LatticeBoltzmann::~LatticeBoltzmann(void){
+    delete[] f; delete[] f_new;
 }
