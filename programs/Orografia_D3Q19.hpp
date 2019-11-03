@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cmath>
 #include<fstream>
+#include<string>
 
 const int cube = 8;
 const int Lx = cube, Ly = cube, Lz = cube;
@@ -29,7 +30,7 @@ class LatticeBoltzmann{
         void propagate(void);
         void initialize(double rho0, double Ux0, double Uy0, double Uz0);
         void impose_fields(double v);
-        void print(const char *filename, double v);
+        void print(std::string filename, double v);
         void test(void){ std::cout << "LB working ok" << std::endl;}
 };
 
@@ -147,7 +148,7 @@ void LatticeBoltzmann::impose_fields(double v){
             }
 }
 
-void LatticeBoltzmann::print(const char *filename, double v){
+void LatticeBoltzmann::print(std::string filename, double v){
     std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
     for(int ix=0; ix<Lx; ix+=4)
         for(int iy=0; iy<Ly; iy+=4)
