@@ -1,7 +1,8 @@
 #include<iostream>
 #include<cmath>
+#include<fstream>
 
-const int cube = 64;
+const int cube = 8;
 const int Lx = cube, Ly = cube, Lz = cube;
 const int D = 3, Q = 19;
 
@@ -26,8 +27,9 @@ class LatticeBoltzmann{
         double f_eq(double rho0, double Ux0, double Uy0, double Uz0, int i);
         void collide(void);
         void propagate(void);
-        void initialize(void);
-        void impose_fields(void);
+        void initialize(double rho0, double Ux0, double Uy0, double Uz0);
+        void impose_fields(double v);
+        void print(const char *filename, double v);
         void test(void){ std::cout << "LB working ok" << std::endl;}
 };
 
@@ -52,7 +54,7 @@ LatticeBoltzmann::LatticeBoltzmann(void){
 
     V[0][13]=1;   V[0][14]=-1;  V[0][15]=1;   V[0][16]=-1;  V[0][17]=0;   V[0][18]=0;
     V[1][13]=-1;  V[1][14]=1;   V[1][15]=0;   V[1][16]=0;   V[1][17]=1;   V[1][18]=-1;
-    V[0][13]=0;   V[2][14]=0;   V[2][15]=-1;  V[2][16]=1;   V[2][17]=-1;  V[2][18]=1;
+    V[2][13]=0;   V[2][14]=0;   V[2][15]=-1;  V[2][16]=1;   V[2][17]=-1;  V[2][18]=1;
     // f and f_new
     f = new double[Lx*Ly*Lz*Q];
     f_new = new double[Lx*Ly*Lz*Q];
@@ -101,17 +103,60 @@ double LatticeBoltzmann::f_eq(double rho0, double Ux0, double Uy0, double Uz0, i
 }
 
 void LatticeBoltzmann::collide(void){
-    int nada = 0;
+    double rho0, Ux0, Uy0, Uz0;
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lz; iz++){
+                rho0 = rho(ix, iy, iz);
+                Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
+                for(int i=0; i<Q; i++)
+                    f_new[ix+iy+iz+i] = UmUtau*f[ix+iy+iz+i] + Utau*f_eq(rho0, Ux0, Uy0, Uz0, i);
+            }
 }
 
 void LatticeBoltzmann::propagate(void){
-    int nada = 0;
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lz; iz++)
+                for(int i=0; i<Q; i++){
+                    int x_pos = (ix + V[0][i] + Lx)%Lx;
+                    int y_pos = (iy + V[1][i] + Ly)%Ly;
+                    int z_pos = (iz + V[2][i] + Lz)%Lz;
+                    f[z_pos] = f_new[ix+iy+iz+i];
+                }
 }
 
-void LatticeBoltzmann::initialize(void){
-    int nada = 0;
+void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz0){
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lx; iz++)
+                for(int i=0; i<Q; i++){
+                    f[ix+iy+iz+i] = f_eq(rho0, Ux0, Uy0, Uz0, i);
+                }
 }
 
-void LatticeBoltzmann::impose_fields(void){
-    int nada = 0;
+void LatticeBoltzmann::impose_fields(double v){
+    double rho0;
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lx; iz++){
+                rho0 = rho(ix, iy, iz);
+                
+                if(ix == 0)
+                    for(int i=0; i<Q; i++) f_new[ix+iy+iz+i] = f_eq(rho0, v, 0, 0, i);
+            }
+}
+
+void LatticeBoltzmann::print(const char *filename, double v){
+    std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
+    for(int ix=0; ix<Lx; ix+=4)
+        for(int iy=0; iy<Ly; iy+=4)
+            for(int iz=0; iz<Lx; iz+=4){
+                rho0 = rho(ix, iy, iz);
+                Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
+                File << ix << '\t' << iy << '\t' << iz << '\t' << 4*(Ux0)/v << '\t'
+                << 4*Uy0/v << '\t' << 4*Uz0/v << '\n';
+            }
+    File << std::endl;
+    File.close();
 }
