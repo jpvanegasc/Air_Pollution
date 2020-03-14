@@ -4,7 +4,7 @@ int main(void){
     LatticeBoltzmann Bogota;
     int t_max = 10;
 
-    Bogota.initialize();
+    Bogota.initialize(1.0, 1.0, 0, 0);
 
     for(int t=0; t<t_max; t++){
         Bogota.collide();
