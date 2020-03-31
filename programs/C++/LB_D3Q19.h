@@ -1,9 +1,4 @@
-#include<iostream>
-#include<cmath>
-#include<fstream>
-#include<string>
-
-#include"Constants.hpp"
+#include"constants.h"
 
 class LatticeBoltzmann{
     private:
@@ -21,6 +16,7 @@ class LatticeBoltzmann{
         double Jy_new(int ix, int iy, int iz);
         double Jz_new(int ix, int iy, int iz);
         double f_eq(double rho0, double Ux0, double Uy0, double Uz0, int i);
+        double f_neq(void);
         void collide(void);
         void propagate(void);
         void initialize(double rho0, double Ux0, double Uy0, double Uz0);

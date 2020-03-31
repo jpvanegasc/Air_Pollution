@@ -1,8 +1,4 @@
-#include<iostream>
-#include<cmath>
-#include<string>
-#include<sstream>
-#include"Fluids_D3Q19.hpp"
+#include"LB_D3Q19.h"
 
 std::string filename(int t);
 

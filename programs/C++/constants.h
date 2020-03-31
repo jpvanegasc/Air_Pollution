@@ -1,3 +1,9 @@
+#include<iostream>
+#include<cmath>
+#include<fstream>
+#include<string>
+#include<sstream>
+
 const int cube = 64;
 const int Lx = cube, Ly = cube, Lz = cube;
 const int D = 3, Q = 19;
