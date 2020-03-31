@@ -4,7 +4,7 @@ CACH = --tool=cachegrind
 C_STD = -std=c++11
 all : main.o
 
-main.o : main.cpp
+main.o : main.cpp *.h
 	g++ $(C_STD) -O2 $< -o $@
 	time ./$@
 
