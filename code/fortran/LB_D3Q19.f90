@@ -2,14 +2,14 @@
 module LB_D3Q19
     use constants
     implicit none
-    real*8, dimension(Q) :: w = (/1.0/3.0, &
+    real(8), dimension(Q) :: w = (/1.0/3.0, &
         1.0/18.0, 1.0/18.0, 1.0/18.0, 1.0/18.0, 1.0/18.0, 1.0/18.0, &
         1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, &
         1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0/)
     integer, dimension(Q) :: Vx = (/0, 1, -1, 0, 0, 0, 0, 1, -1, 1, -1, 0, 0, 1, -1, 1, -1, 0, 0/)
     integer, dimension(Q) :: Vy = (/0, 0, 0, 1, -1, 0, 0, 1, -1, 0, 0, 1, -1, -1, 1, 0, 0, 1, -1/)
     integer, dimension(Q) :: Vz = (/0, 0, 0, 0, 0, 1, -1, 0, 0, 1, -1, 1, -1, 0, 0, -1, 1, -1, 1/)
-    real*8, dimension(size) :: f, f_new
+    real(8), dimension(size) :: f, f_new
     
     public :: initialize
     public :: collide
@@ -27,7 +27,7 @@ contains
      function rho(ix, iy, iz) result(r)
         implicit none
         integer :: ix, iy, iz, i, pos
-        real*8 :: r
+        real(8) :: r
         r= 0
         pos = get_1D(ix,iy,iz)
         do i = 1, Q
@@ -38,7 +38,7 @@ contains
      function Jx(ix, iy, iz) result(J)
         implicit none
         integer :: ix, iy, iz, i, pos
-        real*8 :: J
+        real(8) :: J
         J = 0
         pos = get_1D(ix,iy,iz)
         do i = 1, Q
@@ -49,7 +49,7 @@ contains
      function Jy(ix, iy, iz) result(J)
         implicit none
         integer :: ix, iy, iz, i, pos
-        real*8 :: J
+        real(8) :: J
         J = 0
         pos = get_1D(ix,iy,iz)
         do i = 1, Q
@@ -60,7 +60,7 @@ contains
      function Jz(ix, iy, iz) result(J)
         implicit none
         integer :: ix, iy, iz, i, pos
-        real*8 :: J
+        real(8) :: J
         J = 0
         pos = get_1D(ix,iy,iz)
         do i = 1, Q
@@ -70,7 +70,7 @@ contains
 
     function f_eq(rho0, Ux0, Uy0, Uz0, i) result(f)
         implicit none
-        real*8 :: rho0, Ux0, Uy0, Uz0, UdotVi, U2, f
+        real(8) :: rho0, Ux0, Uy0, Uz0, UdotVi, U2, f
         integer :: i
         UdotVi = Ux0*Vx(i) + Uy0*Vy(i) + Uz0*Vz(i)
         U2 = Ux0*Ux0 + Uy0*Uy0 + Uz0*Uz0
@@ -80,7 +80,7 @@ contains
     subroutine collide
         implicit none
         integer :: ix, iy, iz, i, pos
-        real*8 :: rho0, Ux0, Uy0, Uz0
+        real(8) :: rho0, Ux0, Uy0, Uz0
         do ix=1, Lx
             do iy=1, Ly
                 do iz=1, Lz
@@ -129,7 +129,7 @@ contains
 
     subroutine initialize(rho0, Ux0, Uy0, Uz0)
         implicit none
-        real*8 :: rho0, Ux0, Uy0, Uz0
+        real(8) :: rho0, Ux0, Uy0, Uz0
         integer :: ix, iy, iz, i, pos
         do ix=1, Lx
             do iy=1, Ly
@@ -147,7 +147,7 @@ contains
     subroutine impose_fields(v)
         implicit none
         integer ix, iy, iz, i, pos
-        real*8 :: rho0, v, zero
+        real(8) :: rho0, v, zero
         zero = 0.0
         do ix=1, Lx
             do iy=1, Ly
@@ -173,7 +173,7 @@ contains
 
     subroutine print(v)
         implicit none
-        real*8 :: v, rho0, Ux0, Uy0, Uz0
+        real(8) :: v, rho0, Ux0, Uy0, Uz0
         integer :: ix, iy, iz
         do ix=1, Lx, 4
             do iy=1, Ly, 4
