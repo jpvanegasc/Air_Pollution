@@ -9,6 +9,9 @@ the Sabana de Bogota.
 * Jose Daniel Muñoz
 * Pierre Sagaut
 
+## Biography
+* Wind comfort assessment by means of large eddy simulation with lattice Boltzmann method in full scale city area
+
 ## Notes
 This project was made using diferent programming languages, and for now, no one of them 
 has prevalence over the others. Programming languages are divided by folders, and each one of them has 
