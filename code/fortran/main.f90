@@ -3,7 +3,7 @@ program main
     implicit none
     integer :: t, t_max
     real(8) :: rho0, v0, zero
-    t_max = 1
+    t_max = 100
     rho0 = 1.0
     v0 = 10.0
     zero = 0.0

@@ -6,9 +6,9 @@ module LB_D3Q19
         1.0/18.0, 1.0/18.0, 1.0/18.0, 1.0/18.0, 1.0/18.0, 1.0/18.0, &
         1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, &
         1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0/)
-    integer, dimension(Q) :: Vx = (/0, 1, -1, 0, 0, 0, 0, 1, -1, 1, -1, 0, 0, 1, -1, 1, -1, 0, 0/)
-    integer, dimension(Q) :: Vy = (/0, 0, 0, 1, -1, 0, 0, 1, -1, 0, 0, 1, -1, -1, 1, 0, 0, 1, -1/)
-    integer, dimension(Q) :: Vz = (/0, 0, 0, 0, 0, 1, -1, 0, 0, 1, -1, 1, -1, 0, 0, -1, 1, -1, 1/)
+    integer, dimension(Q) :: Vx = (/0, 1, -1, 0,  0, 0,  0, 1, -1, 1, -1, 0,  0,  1, -1,  1, -1,  0,  0/)
+    integer, dimension(Q) :: Vy = (/0, 0,  0, 1, -1, 0,  0, 1, -1, 0,  0, 1, -1, -1,  1,  0,  0,  1, -1/)
+    integer, dimension(Q) :: Vz = (/0, 0,  0, 0,  0, 1, -1, 0,  0, 1, -1, 1, -1,  0,  0, -1,  1, -1,  1/)
     real(8), dimension(size) :: f, f_new
     
     public :: initialize
@@ -106,18 +106,10 @@ contains
                 do iz=1, Lz
                     pos_new = get_1D(ix, iy, iz)
                     do i=1, Q
-                        x_pos = ix + Vx(i)
-                        y_pos = iy + Vy(i)
-                        z_pos = iz + Vz(i)
-                        if (x_pos<=1 .or. x_pos>Lx) then
-                            x_pos = ix - Vx(i)
-                        end if
-                        if (y_pos<=1 .or. y_pos>Ly) then
-                            y_pos = iy - Vy(i)
-                        end if
-                        if (z_pos<=1 .or. z_pos>Lz) then
-                            z_pos = iz + Vz(i)
-                        end if
+                        x_pos = modulo((Lx + ix + Vx(i) - 1), Lx) + 1
+                        y_pos = modulo((Ly + iy + Vy(i) - 1), Ly) + 1
+                        z_pos = modulo((Lz + iz + Vz(i) - 1), Lz) + 1
+
                         pos = get_1D(x_pos, y_pos, z_pos)
                         f(pos+i) = f_new(pos_new+i)
                     end do
@@ -156,7 +148,7 @@ contains
                         pos = get_1D(ix, iy, iz)
                         rho0 = rho(ix, iy, iz)
                         do i=1, Q
-                            f_new(pos+i) = f_eq(rho0, v/2.0, zero, zero, i)
+                            f_new(pos+i) = f_eq(rho0, v, zero, zero, i)
                         end do
                     end if
                     if ((ix-Lx/2)*(ix-Lx/2) + (iy-Ly/2)*(iy-Ly/2) + (iz-Lz/2)*(iz-Lz/2) <= cube/4) then 

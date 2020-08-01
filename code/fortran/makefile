@@ -7,9 +7,9 @@ all : a.out
 
 a.out : main.f90 LB_D3Q19.mod Constants.mod
 	gfortran $(F_STD) main.f90 LB_D3Q19.f90 Constants.f90
-	time ./$@
+	time ./$@ > data.txt
 
-LB_D3Q19.mod : LB_D3Q19.f90
+LB_D3Q19.mod : LB_D3Q19.f90 Constants.mod
 	gfortran -c $<
 
 Constants.mod : Constants.f90
