@@ -1,5 +1,11 @@
 #include"constants.h"
 
+/**
+ * Transform from 3D notation to 1D notation 
+ * @return 1D macro-coordinate on array
+ */
+#define get_1D(ix, iy, iz) (ix*x_mult + iy*y_mult + iz*z_mult)
+
 class LatticeBoltzmann{
     private:
         double w[Q]; int V[D][Q];
@@ -7,7 +13,6 @@ class LatticeBoltzmann{
     public:
         LatticeBoltzmann(void);
         ~LatticeBoltzmann(void);
-        int get_1D(int ix, int iy, int iz);
         double rho(int ix, int iy, int iz);
         double Jx(int ix, int iy, int iz);
         double Jy(int ix, int iy, int iz);
@@ -54,13 +59,6 @@ LatticeBoltzmann::LatticeBoltzmann(void){
 /* Free arrays memory */
 LatticeBoltzmann::~LatticeBoltzmann(void){
     delete[] f; delete[] f_new;
-}
-/**
- * Transform from 3D notation to 1D notation 
- * @return 1D macro-coordinate on array
- */
-int LatticeBoltzmann::get_1D(int ix, int iy, int iz){
-    return ix*x_mult + iy*y_mult + iz*z_mult;
 }
 // density
 double LatticeBoltzmann::rho(int ix, int iy, int iz){
