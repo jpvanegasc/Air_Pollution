@@ -135,11 +135,8 @@ void LatticeBoltzmann::propagate(void){
         for(int iy=0; iy<Ly; iy++)
             for(int iz=0; iz<Lz; iz++){
                 int pos_new = get_1D(ix, iy, iz);
-                for(int i=0; i<Q; i++){ // Non periodic, non optimized
-                    int x_pos = (ix + V[0][i]), y_pos = (iy + V[1][i]), z_pos = (iz + V[2][i]);
-                    if(x_pos<0 || x_pos>=Lx) x_pos = ix - V[0][i];
-                    if(y_pos<0 || y_pos>=Ly) y_pos = iy - V[1][i];
-                    if(z_pos<0 || z_pos>=Lz) z_pos = iz - V[2][i];
+                for(int i=0; i<Q; i++){
+                    int x_pos = (Lx + ix + V[0][i])%Lx, y_pos = (Ly + iy + V[1][i])%Ly, z_pos = (Lz + iz + V[2][i])%Lz;
                     int pos = get_1D(x_pos, y_pos, z_pos);
                     f[pos + i] = f_new[pos_new + i];
                 }
