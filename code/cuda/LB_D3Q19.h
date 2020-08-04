@@ -11,7 +11,6 @@ private:
 public:
     LatticeBoltzmann(void);
     ~LatticeBoltzmann(void);
-    int get_1D(int ix, int iy, int iz);
     double rho(int ix, int iy, int iz);
     double Jx(int ix, int iy, int iz);
     double Jy(int ix, int iy, int iz);
@@ -23,7 +22,7 @@ public:
     void collide(void);
     void propagate(void);
     void initialize(double rho0, double Jx0, double Jy0, double Jz0);
-    void impose_fields(void);
+    void impose_fields(float v);
     void save(std::string filename);
 };
 /* Initialize weights and basis vectors, allocate memory for arrays */
@@ -65,13 +64,6 @@ LatticeBoltzmann::LatticeBoltzmann(void){
 LatticeBoltzmann::~LatticeBoltzmann(){
     delete[] f; delete[] f_new;
     cudaFree(d_f); cudaFree(d_f_new);
-}
-/**
- * Transform from 3D notation to 1D notation 
- * @return 1D macro-coordinate on array
- */
- int LatticeBoltzmann::get_1D(int ix, int iy, int iz){
-    return ix*x_mult + iy*y_mult + iz*z_mult;
 }
 // Density
 double LatticeBoltzmann::rho(int ix, int iy, int iz){
@@ -152,8 +144,8 @@ void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz
     cudaMemcpy(d_f_new, f_new, size*sizeof(float), cudaMemcpyHostToDevice);
 }
 /* Host */
-void LatticeBoltzmann::impose_fields(void){
-    d_impose_fields<<<BpG, TpB>>>(d_f, d_f_new);
+void LatticeBoltzmann::impose_fields(float v){
+    d_impose_fields<<<BpG, TpB>>>(d_f, d_f_new, v);
 }
 /* Load data from device and save on file */
 void LatticeBoltzmann::save(std::string filename){

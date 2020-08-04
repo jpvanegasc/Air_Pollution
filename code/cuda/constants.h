@@ -9,15 +9,15 @@
 #include<cuda_runtime.h>
 
 /* Size */
-#define Lx 16
-#define Ly 16
-#define Lz 16
+#define Lx 256
+#define Ly 64
+#define Lz 64
 #define Q 19
 #define D 3
 
-#define size Lx*Ly*Lz*Q
-#define x_mult Ly*Lz*Q
-#define y_mult Lz*Q
+#define size (Lx*Ly*Lz*Q)
+#define x_mult (Ly*Lz*Q)
+#define y_mult (Lz*Q)
 #define z_mult Q
 
 /* Parallelization constants */
@@ -43,3 +43,9 @@ const dim3 BpG(Bx, By, Bz);
 #define tau (0.5)
 #define Utau (2.0)
 #define UmUtau (-1.0)
+
+/**
+ * Transform from 3D notation to 1D notation 
+ * @return 1D macro-coordinate on array
+ */
+#define get_1D(ix, iy, iz) ((ix*x_mult) + (iy*y_mult) + (iz*z_mult))
