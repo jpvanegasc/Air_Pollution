@@ -4,7 +4,7 @@
  * Transform from 3D notation to 1D notation 
  * @return 1D macro-coordinate on array
  */
-#define get_1D(ix, iy, iz) (ix*x_mult + iy*y_mult + iz*z_mult)
+#define get_1D(ix, iy, iz) ((ix*x_mult) + (iy*y_mult) + (iz*z_mult))
 
 class LatticeBoltzmann{
     private:
@@ -162,14 +162,7 @@ void LatticeBoltzmann::impose_fields(double v){
                 if(ix==0){
                     pos = get_1D(ix, iy, iz);
                     rho0 = rho(ix, iy, iz);
-                    for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, v/2.0, 0, 0, i);
-                    continue;
-                }
-                if((ix-Lx/2)*(ix-Lx/2) + (iy-Ly/2)*(iy-Ly/2) + (iz-Lz/2)*(iz-Lz/2) <= cube/3){
-                    pos = get_1D(ix, iy, iz);
-                    rho0 = rho(ix, iy, iz);
-                    for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, 0, 0, 0, i);
-                    continue;
+                    for(int i=0; i<Q; i++) f[pos + i] = f_eq(rho0, v, 0.0, 0.0, i);
                 }
             }
 }
@@ -177,7 +170,7 @@ void LatticeBoltzmann::impose_fields(double v){
 void LatticeBoltzmann::save(std::string filename, double v){
     if(v == 0.0) std::cout << "v = 0" << std::endl;
     std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
-    for(int ix=0; ix<Lx; ix+=4)
+    for(int ix=0; ix<Lx; ix+=4){
         for(int iy=0; iy<Ly; iy+=4){
             for(int iz=0; iz<Lz; iz+=4){
                 rho0 = rho(ix, iy, iz);
@@ -187,6 +180,8 @@ void LatticeBoltzmann::save(std::string filename, double v){
             }
             File << '\n';
         }
+        File << '\n';
+    }
     File << std::endl;
     File.close();
 }
