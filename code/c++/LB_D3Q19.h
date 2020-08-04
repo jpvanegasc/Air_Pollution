@@ -149,7 +149,7 @@ void LatticeBoltzmann::propagate(void){
 void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz0){
     for(int ix=0; ix<Lx; ix++)
         for(int iy=0; iy<Ly; iy++)
-            for(int iz=0; iz<Lx; iz++){
+            for(int iz=0; iz<Lz; iz++){
                 int pos = get_1D(ix, iy, iz);
                 for(int i=0; i<Q; i++) f[pos + i] = f_eq(rho0, Ux0, Uy0, Uz0, i);
             }
@@ -181,13 +181,15 @@ void LatticeBoltzmann::save(std::string filename, double v){
     if(v == 0.0) std::cout << "v = 0" << std::endl;
     std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
     for(int ix=0; ix<Lx; ix+=4)
-        for(int iy=0; iy<Ly; iy+=4)
-            for(int iz=0; iz<Lx; iz+=4){
+        for(int iy=0; iy<Ly; iy+=4){
+            for(int iz=0; iz<Lz; iz+=4){
                 rho0 = rho(ix, iy, iz);
                 Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
                 File << ix << '\t' << iy << '\t' << iz << '\t' << 4*(Ux0)/v << '\t'
                 << 4*Uy0/v << '\t' << 4*Uz0/v << '\n';
             }
+            File << '\n';
+        }
     File << std::endl;
     File.close();
 }
@@ -197,7 +199,7 @@ void LatticeBoltzmann::print(double v){
     double rho0, Ux0, Uy0, Uz0;
     for(int ix=0; ix<Lx; ix+=4)
         for(int iy=0; iy<Ly; iy+=4)
-            for(int iz=0; iz<Lx; iz+=4){
+            for(int iz=0; iz<Lz; iz+=4){
                 rho0 = rho(ix, iy, iz);
                 Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
                 std::cout << ix << '\t' << iy << '\t' << iz << "\t\t" << 4*(Ux0)/v << '\t'
