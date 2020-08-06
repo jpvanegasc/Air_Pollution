@@ -27,6 +27,7 @@ class LatticeBoltzmann{
         void initialize(double rho0, double Ux0, double Uy0, double Uz0);
         void impose_fields(double v);
         void save(std::string filename, double v);
+        void save_2D(std::string filename, int z_pos, double v);
         void print(double v);
 };
 /* Initialize weights and basis vectors, allocate memory for arrays */
@@ -185,6 +186,22 @@ void LatticeBoltzmann::save(std::string filename, double v){
                 << 4*Uy0/v << '\t' << 4*Uz0/v << '\n';
             }
             File << '\n';
+        }
+        File << '\n';
+    }
+    File << std::endl;
+    File.close();
+}
+
+// Saves a 2D view from a fixed z position
+void LatticeBoltzmann::save_2D(std::string filename, int z_pos, double v){
+    if(v == 0.0) std::cout << "v = 0" << std::endl;
+    std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
+    for(int ix=0; ix<Lx; ix+=4){
+        for(int iy=0; iy<Ly; iy+=4){
+            rho0 = rho(ix, iy, z_pos);
+            Ux0 = Jx(ix, iy, z_pos)/rho0; Uy0 = Jy(ix, iy, z_pos)/rho0; Uz0 = Jz(ix, iy, z_pos)/rho0;
+            File << ix << '\t' << iy << '\t' << 4*(Ux0)/v << '\t' << 4*Uy0/v << '\n';
         }
         File << '\n';
     }
