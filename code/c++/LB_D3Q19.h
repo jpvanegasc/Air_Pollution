@@ -13,10 +13,10 @@ class LatticeBoltzmann{
     public:
         LatticeBoltzmann(void);
         ~LatticeBoltzmann(void);
-        double rho(int ix, int iy, int iz);
-        double Jx(int ix, int iy, int iz);
-        double Jy(int ix, int iy, int iz);
-        double Jz(int ix, int iy, int iz);
+        double rho(int position);
+        double Jx(int position);
+        double Jy(int position);
+        double Jz(int position);
         double Jx_new(int ix, int iy, int iz);
         double Jy_new(int ix, int iy, int iz);
         double Jz_new(int ix, int iy, int iz);
@@ -62,31 +62,31 @@ LatticeBoltzmann::~LatticeBoltzmann(void){
     delete[] f; delete[] f_new;
 }
 // density
-double LatticeBoltzmann::rho(int ix, int iy, int iz){
-    double rho = 0; int pos = get_1D(ix, iy, iz);
+double LatticeBoltzmann::rho(int position){
+    double r = 0;
     for(int i=0; i<Q; i++)
-        rho += f[pos + i];
-    return rho;
+        r += f[position + i];
+    return r;
 }
 // U_x * rho
-double LatticeBoltzmann::Jx(int ix, int iy, int iz){
-    double J_x = 0; int pos = get_1D(ix, iy, iz);
+double LatticeBoltzmann::Jx(int position){
+    double J_x = 0;
     for(int i=0; i<Q; i++)
-        J_x += f[pos + i] * V[0][i];
+        J_x += f[position + i] * V[0][i];
     return J_x;
 }
 // U_y * rho
-double LatticeBoltzmann::Jy(int ix, int iy, int iz){
-    double J_y = 0; int pos = get_1D(ix, iy, iz);
+double LatticeBoltzmann::Jy(int position){
+    double J_y = 0;
     for(int j=0; j<Q; j++)
-        J_y += f[pos+j] * V[1][j];
+        J_y += f[position+j] * V[1][j];
     return J_y;
 }
 // U_z * rho
-double LatticeBoltzmann::Jz(int ix, int iy, int iz){
-    double J_z = 0; int pos = get_1D(ix, iy, iz);
+double LatticeBoltzmann::Jz(int position){
+    double J_z = 0;
     for(int k=0; k<Q; k++)
-        J_z += f[pos+k] * V[2][k];
+        J_z += f[position+k] * V[2][k];
     return J_z;
 }
 // Using f_new
@@ -123,9 +123,9 @@ void LatticeBoltzmann::collide(void){
         #pragma omp parallel for private(pos, rho0, Ux0, Uy0, Uz0)
         for(int iy=0; iy<Ly; iy++)
             for(int iz=0; iz<Lz; iz++){
-                rho0 = rho(ix, iy, iz);
-                Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
                 pos = get_1D(ix, iy, iz);
+                rho0 = rho(pos);
+                Ux0 = Jx(pos)/rho0; Uy0 = Jy(pos)/rho0; Uz0 = Jz(pos)/rho0;
                 for(int i=0; i<Q; i++)
                     f_new[pos + i] = UmUtau*f[pos + i] + Utau*f_eq(rho0, Ux0, Uy0, Uz0, i);
             }
@@ -162,7 +162,7 @@ void LatticeBoltzmann::impose_fields(double v){
                 // Wind tunnel
                 if(ix==0){
                     pos = get_1D(ix, iy, iz);
-                    rho0 = rho(ix, iy, iz);
+                    rho0 = rho(pos);
                     for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, v, 0.0, 0.0, i);
                 }
                 // Box obstacle
@@ -170,7 +170,7 @@ void LatticeBoltzmann::impose_fields(double v){
                     ((Lx3<=ix)&&(ix<T_Lx3)) && ((Ly3<=iy)&&(iy<T_Ly3)) && ((0<=iz)&&(iz<Lz2))
                 ){
                     pos = get_1D(ix, iy, iz);
-                    rho0 = rho(ix, iy, iz);
+                    rho0 = rho(pos);
                     for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, 0.0, 0.0, 0.0, i);
                 }
             }
@@ -182,8 +182,9 @@ void LatticeBoltzmann::save(std::string filename, double v){
     for(int ix=0; ix<Lx; ix+=4){
         for(int iy=0; iy<Ly; iy+=4){
             for(int iz=0; iz<Lz; iz+=4){
-                rho0 = rho(ix, iy, iz);
-                Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
+                int pos = get_1D(ix, iy, iz);
+                rho0 = rho(pos);
+                Ux0 = Jx(pos)/rho0; Uy0 = Jy(pos)/rho0; Uz0 = Jz(pos)/rho0;
                 File << ix << '\t' << iy << '\t' << iz << '\t' << 4*(Ux0)/v << '\t'
                 << 4*Uy0/v << '\t' << 4*Uz0/v << '\n';
             }
@@ -201,8 +202,9 @@ void LatticeBoltzmann::save_2D(std::string filename, int z_pos, double v){
     std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
     for(int ix=0; ix<Lx; ix+=4){
         for(int iy=0; iy<Ly; iy+=4){
-            rho0 = rho(ix, iy, z_pos);
-            Ux0 = Jx(ix, iy, z_pos)/rho0; Uy0 = Jy(ix, iy, z_pos)/rho0; Uz0 = Jz(ix, iy, z_pos)/rho0;
+            int pos = get_1D(ix, iy, z_pos);
+            rho0 = rho(pos);
+            Ux0 = Jx(pos)/rho0; Uy0 = Jy(pos)/rho0; Uz0 = Jz(pos)/rho0;
             File << ix << '\t' << iy << '\t' << 4*(Ux0)/v << '\t' << 4*Uy0/v << '\n';
         }
         File << '\n';
@@ -217,8 +219,9 @@ void LatticeBoltzmann::print(double v){
     for(int ix=0; ix<Lx; ix+=4)
         for(int iy=0; iy<Ly; iy+=4)
             for(int iz=0; iz<Lz; iz+=4){
-                rho0 = rho(ix, iy, iz);
-                Ux0 = Jx(ix, iy, iz)/rho0; Uy0 = Jy(ix, iy, iz)/rho0; Uz0 = Jz(ix, iy, iz)/rho0;
+                int pos = get_1D(ix, iy, iz);
+                rho0 = rho(pos);
+                Ux0 = Jx(pos)/rho0; Uy0 = Jy(pos)/rho0; Uz0 = Jz(pos)/rho0;
                 std::cout << ix << '\t' << iy << '\t' << iz << "\t\t" << 4*(Ux0)/v << '\t'
                 << 4*Uy0/v << '\t' << 4*Uz0/v << '\n';
             }
