@@ -165,11 +165,13 @@ void LatticeBoltzmann::impose_fields(double v){
                     rho0 = rho(ix, iy, iz);
                     for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, v, 0.0, 0.0, i);
                 }
-                // Ball obstacle
-                else if((ix-Lx/2)*(ix-Lx/2) + (iy-Ly/2)*(iy-Ly/2) + (iz-Lz/2)*(iz-Lz/2) <= Ly*Ly/9.0){
+                // Box obstacle
+                else if(
+                    ((Lx3<=ix)&&(ix<T_Lx3)) && ((Ly3<=iy)&&(iy<T_Ly3)) && ((0<=iz)&&(iz<Lz2))
+                ){
                     pos = get_1D(ix, iy, iz);
                     rho0 = rho(ix, iy, iz);
-                    for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, 0, 0, 0, i);
+                    for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, 0.0, 0.0, 0.0, i);
                 }
             }
 }
