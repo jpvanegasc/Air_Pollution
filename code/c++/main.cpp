@@ -15,7 +15,7 @@ int main(void){
         Bogota.propagate();
     }
 
-    Bogota.save(filename(1), v);
+    Bogota.save_2D(filename(1), 10, v);
 
     return 0;
 }
