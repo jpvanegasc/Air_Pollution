@@ -3,12 +3,23 @@
  */
 #include"constants.h"
 
-// CUDA constants
+/*==================
+ CUDA constants & macros
+ ==================*/
 
 __constant__ float d_w[Q];
 __constant__ int d_Vx[Q];
 __constant__ int d_Vy[Q];
 __constant__ int d_Vz[Q];
+
+/**
+ * Transform from 3D notation to 1D notation 
+ * @return 1D macro-coordinate on array
+ */
+#define get_1D(ix, iy, iz) ((ix*x_mult) + (iy*y_mult) + (iz*z_mult))
+
+// Equilibrium function for fluids
+#define d_f_eq(rho0, U_Vi, U_2, i) (rho0*d_w[i]*(1.0 + 3.0*U_Vi + 4.5*U_Vi*U_Vi - 1.5*U_2))
 
 /*==================
  Macroscopic fields 
@@ -37,12 +48,6 @@ __device__ float d_Jz(float *f0, int pos){
     for(int i=0; i<Q; i++) Jz += f0[pos+i]*d_Vz[i];
     return Jz;
 }
-/* Eq equation for fluids */
-__device__ float d_f_eq(double rho0, double Ux0, double Uy0, double Uz0, int i){
-    float UdotVi = Ux0*d_Vx[i] + Uy0*d_Vy[i] + Uz0*d_Vz[i];
-    float U2 = Ux0*Ux0 + Uy0*Uy0 + Uz0*Uz0;
-    return rho0*d_w[i]*(1 + 3*UdotVi + 4.5*UdotVi*UdotVi - 1.5*U2);
-}
 
 /*================= 
  Evolution Kernels 
@@ -54,8 +59,12 @@ __global__ void d_collide(float *d_f, float *d_f_new){
     float rho0 = d_rho(d_f, pos); 
     float Ux0 = d_Jx(d_f, pos)/rho0, Uy0 = d_Jy(d_f, pos)/rho0, Uz0 = d_Jz(d_f, pos)/rho0;
 
-    for(int i=0; i<Q; i++) 
-        d_f_new[pos+i] = UmUtau*d_f[pos+i] + Utau*d_f_eq(rho0,Ux0,Uy0,Uz0,i);
+    float U2 = Ux0*Ux0 + Uy0*Uy0 + Uz0*Uz0;
+
+    for(int i=0; i<Q; i++){
+        float UdotVi = Ux0*d_Vx[i] + Uy0*d_Vy[i] + Uz0*d_Vz[i];
+        d_f_new[pos+i] = UmUtau*d_f[pos+i] + Utau*d_f_eq(rho0, UdotVi, U2, i);
+    }
 }
 
 __global__ void d_propagate(float *d_f, float *d_f_new){
@@ -75,11 +84,15 @@ __global__ void d_impose_fields(float *d_f, float *d_f_new, float v){
     if(ix==0){
         unsigned int pos = get_1D(ix, iy, iz);
         float rho0 = d_rho(d_f, pos);
-        for(int i=0; i<Q; i++) d_f_new[pos + i] = d_f_eq(rho0, v, 0.0, 0.0, i);
+        for(int i=0; i<Q; i++){
+            float UdotVi = v*d_Vx[i];
+            float v2 = v*v;
+            d_f_new[pos + i] = d_f_eq(rho0, UdotVi, v2, i);
+        }
     }
     else if((ix-Lx/2)*(ix-Lx/2) + (iy-Ly/2)*(iy-Ly/2) + (iz-Lz/2)*(iz-Lz/2) <= Ly*Ly/9.0){
         unsigned int pos = get_1D(ix, iy, iz);
         float rho0 = d_rho(d_f, pos);
-        for(int i=0; i<Q; i++) d_f_new[pos + i] = d_f_eq(rho0, 0, 0, 0, i);
+        for(int i=0; i<Q; i++) d_f_new[pos + i] = d_f_eq(rho0, 0.0, 0.0, i);
     }
 }
