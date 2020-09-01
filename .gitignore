@@ -1,9 +1,14 @@
+# executables
 *a.out
+*.o
+
+# debug files
+*debug
+*.mod
+
+# images & similar files
 *.pdf
 *.png
 *.jpg
-*.o
-*debug
 *.json
 *.txt
-*.mod
