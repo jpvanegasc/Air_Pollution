@@ -8,6 +8,10 @@ main.o : main.cpp *.h
 	g++ $(C_STD) -O2 $< -o $@
 	time ./$@
 
+.PHONY : assembler
+assembler : main.cpp *.h
+	gcc $(C_STD) -g -o main.S -S main.cpp
+
 .PHONY : parallel
 parallel : main.cpp
 	g++ $(C_STD) -fopenmp -O2 $<
