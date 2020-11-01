@@ -14,7 +14,7 @@
 // Obstacle
 #define Lx3 (Lx/3)
 #define Ly3 (Ly/3)
-#define Lz2 (Lz/2Z2
+#define Lz2 (Lz/2)
 
 #define T_Lx3 (2*Lx/3)
 #define T_Ly3 (2*Ly/3)
