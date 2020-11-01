@@ -5,6 +5,7 @@
 # debug files
 *debug
 *.mod
+*.S
 
 # images & similar files
 *.pdf
