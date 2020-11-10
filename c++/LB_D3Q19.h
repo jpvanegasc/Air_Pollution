@@ -10,6 +10,7 @@ class LatticeBoltzmann{
     private:
         double w[Q]; int V[D][Q];
         double *f = NULL,   *f_new = NULL;
+        int opposite_of[19] = {0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 18, 17};
     public:
         LatticeBoltzmann(void);
         ~LatticeBoltzmann(void);
@@ -141,12 +142,20 @@ void LatticeBoltzmann::propagate(void){
         for(int iy=0; iy<Ly; iy++)
             for(int iz=0; iz<Lz; iz++){
                 int pos_new = get_1D(ix, iy, iz);
-                for(int i=0; i<Q; i++){
-                    int x_pos = (Lx + ix + V[0][i])%Lx, y_pos = (Ly + iy + V[1][i])%Ly, z_pos = (Lz + iz + V[2][i])%Lz;
-                    int pos = get_1D(x_pos, y_pos, z_pos);
-                    f[pos + i] = f_new[pos_new + i];
-                }
-            }
+                    for(int i=0; i<Q; i++){
+                        int x_pos = (Lx + ix + V[0][i])%Lx, y_pos = (Ly + iy + V[1][i])%Ly, z_pos = (Lz + iz + V[2][i])%Lz;
+                        int pos = get_1D(x_pos, y_pos, z_pos);
+
+                        if( // Box obstacle by halfway bounce-back
+                            ((Lx3<=ix)&&(ix<T_Lx3)) && ((Ly3<=iy)&&(iy<T_Ly3)) && ((0<=iz)&&(iz<Lz2))
+                        ){
+                            f_new[pos + opposite_of[i]] = f_new[pos + i];
+                        }
+                        else{ // Fluid site
+                            f[pos + i] = f_new[pos_new + i];
+                        }
+                    }
+        }
 }
 
 void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz0){
@@ -166,30 +175,18 @@ void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz
 void LatticeBoltzmann::impose_fields(double v){
     int pos; double rho0;
     #pragma omp parallel for private(pos, rho0)
-    for(int ix=0; ix<Lx; ix++)
-        for(int iy=0; iy<Ly; iy++)
-            for(int iz=0; iz<Lz; iz++){
-                // Wind tunnel in x
-                if(ix==0){
-                    pos = get_1D(ix, iy, iz);
+    for(int iy=0; iy<Ly; iy++)
+        for(int iz=0; iz<Lz; iz++){
+            // Wind tunnel in x
+                pos = get_1D(0, iy, iz);
 
-                    rho0 = rho(pos);
-                    for(int i=0; i<Q; i++){
-                        double UdotVi = v*V[0][i];
-                        double v2 = v*v;
-                        f_new[pos + i] = f_eq(rho0, UdotVi, v2, i);
-                    }
+                rho0 = rho(pos);
+                for(int i=0; i<Q; i++){
+                    double UdotVi = v*V[0][i];
+                    double v2 = v*v;
+                    f_new[pos + i] = f_eq(rho0, UdotVi, v2, i);
                 }
-                // Box obstacle
-                else if(
-                    ((Lx3<=ix)&&(ix<T_Lx3)) && ((Ly3<=iy)&&(iy<T_Ly3)) && ((0<=iz)&&(iz<Lz2))
-                ){
-                    pos = get_1D(ix, iy, iz);
-
-                    rho0 = rho(pos);
-                    for(int i=0; i<Q; i++) f_new[pos + i] = f_eq(rho0, 0.0, 0.0, i);
-                }
-            }
+        }
 }
 
 void LatticeBoltzmann::save(std::string filename, double v){
