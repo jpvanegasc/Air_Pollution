@@ -6,14 +6,14 @@
  */
 #define get_1D(ix, iy, iz) ((ix*x_mult) + (iy*y_mult) + (iz*z_mult))
 
-class LatticeBoltzmann{
+class Fluids{
     private:
         double w[Q]; int V[D][Q];
         double *f = NULL,   *f_new = NULL;
         int opposite_of[19] = {0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 18, 17};
     public:
-        LatticeBoltzmann(void);
-        ~LatticeBoltzmann(void);
+        Fluids(void);
+        ~Fluids(void);
         double rho(int position);
         double Jx(int position);
         double Jy(int position);
@@ -34,7 +34,7 @@ class LatticeBoltzmann{
  * Initialize weights and basis vectors, allocate memory for arrays and define equilibrium function 
  * for fluids as preprocessor macro
  */
-LatticeBoltzmann::LatticeBoltzmann(void){
+Fluids::Fluids(void){
     // weights
     w[0] = 1.0/3.0;
     w[1] = w[2] = w[3] = w[4] = w[5] = w[6] = 1.0/18.0;
@@ -65,60 +65,60 @@ LatticeBoltzmann::LatticeBoltzmann(void){
     #define f_eq(rho0, U_Vi, U_2, i) (rho0*w[i]*(1.0 + 3.0*U_Vi + 4.5*U_Vi*U_Vi - 1.5*U_2))
 }
 /* Free arrays memory */
-LatticeBoltzmann::~LatticeBoltzmann(void){
+Fluids::~Fluids(void){
     delete[] f; delete[] f_new;
 }
 // density
-double LatticeBoltzmann::rho(int position){
+double Fluids::rho(int position){
     double r = 0;
     for(int i=0; i<Q; i++)
         r += f[position + i];
     return r;
 }
 // U_x * rho
-double LatticeBoltzmann::Jx(int position){
+double Fluids::Jx(int position){
     double J_x = 0;
     for(int i=0; i<Q; i++)
         J_x += f[position + i] * V[0][i];
     return J_x;
 }
 // U_y * rho
-double LatticeBoltzmann::Jy(int position){
+double Fluids::Jy(int position){
     double J_y = 0;
     for(int j=0; j<Q; j++)
         J_y += f[position+j] * V[1][j];
     return J_y;
 }
 // U_z * rho
-double LatticeBoltzmann::Jz(int position){
+double Fluids::Jz(int position){
     double J_z = 0;
     for(int k=0; k<Q; k++)
         J_z += f[position+k] * V[2][k];
     return J_z;
 }
 // Using f_new
-double LatticeBoltzmann::Jx_new(int ix, int iy, int iz){
+double Fluids::Jx_new(int ix, int iy, int iz){
     double J_x = 0; int pos = get_1D(ix, iy, iz);
     for(int i=0; i<Q; i++)
         J_x += f_new[pos + i] * V[0][i];
     return J_x;
 }
 // Using f_new
-double LatticeBoltzmann::Jy_new(int ix, int iy, int iz){
+double Fluids::Jy_new(int ix, int iy, int iz){
     double J_y = 0; int pos = get_1D(ix, iy, iz);
     for(int j=0; j<Q; j++)
         J_y += f_new[pos+j] * V[1][j];
     return J_y;
 }
 // Using f_new
-double LatticeBoltzmann::Jz_new(int ix, int iy, int iz){
+double Fluids::Jz_new(int ix, int iy, int iz){
     double J_z = 0; int pos = get_1D(ix, iy, iz);
     for(int k=0; k<Q; k++)
         J_z += f_new[pos+k] * V[2][k];
     return J_z;
 }
 
-void LatticeBoltzmann::collide(void){
+void Fluids::collide(void){
     double rho0, Ux0, Uy0, Uz0; int pos;
     for(int ix=0; ix<Lx; ix++)
         #pragma omp parallel for private(pos, rho0, Ux0, Uy0, Uz0)
@@ -137,7 +137,7 @@ void LatticeBoltzmann::collide(void){
             }
 }
 
-void LatticeBoltzmann::propagate(void){
+void Fluids::propagate(void){
     for(int ix=0; ix<Lx; ix++)
         for(int iy=0; iy<Ly; iy++)
             for(int iz=0; iz<Lz; iz++){
@@ -158,7 +158,7 @@ void LatticeBoltzmann::propagate(void){
         }
 }
 
-void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz0){
+void Fluids::initialize(double rho0, double Ux0, double Uy0, double Uz0){
     for(int ix=0; ix<Lx; ix++)
         for(int iy=0; iy<Ly; iy++)
             for(int iz=0; iz<Lz; iz++){
@@ -172,7 +172,7 @@ void LatticeBoltzmann::initialize(double rho0, double Ux0, double Uy0, double Uz
             }
 }
 
-void LatticeBoltzmann::impose_fields(double v){
+void Fluids::impose_fields(double v){
     int pos; double rho0;
     #pragma omp parallel for private(pos, rho0)
     for(int iy=0; iy<Ly; iy++)
@@ -189,7 +189,7 @@ void LatticeBoltzmann::impose_fields(double v){
         }
 }
 
-void LatticeBoltzmann::save(std::string filename, double v){
+void Fluids::save(std::string filename, double v){
     if(v == 0.0) std::cout << "v = 0" << std::endl;
     std::ofstream File(filename); double rho0, Ux0, Uy0, Uz0;
     for(int ix=0; ix<Lx; ix+=4){
@@ -211,7 +211,7 @@ void LatticeBoltzmann::save(std::string filename, double v){
 }
 
 // Saves a 2D view from a fixed z position
-void LatticeBoltzmann::save_2D(std::string filename, int z_pos, double v){
+void Fluids::save_2D(std::string filename, int z_pos, double v){
     if(v == 0.0) std::cout << "v = 0" << std::endl;
     std::ofstream File(filename); double rho0, Ux0, Uy0;
     for(int ix=0; ix<Lx; ix+=4){
@@ -228,7 +228,7 @@ void LatticeBoltzmann::save_2D(std::string filename, int z_pos, double v){
     File.close();
 }
 
-void LatticeBoltzmann::print(double v){
+void Fluids::print(double v){
     if(v == 0.0) std::cout << "v = 0" << std::endl;
     double rho0, Ux0, Uy0, Uz0;
     for(int ix=0; ix<Lx; ix+=4)
