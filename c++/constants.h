@@ -4,6 +4,10 @@
 #include<string>
 #include<sstream>
 
+
+#ifndef AIR_POLLUTION_CPP_CONSTANTS_H
+#define AIR_POLLUTION_CPP_CONSTANTS_H
+
 // Geometry
 #define Lx 256
 #define Ly 64
@@ -29,3 +33,5 @@
 #define tau 0.55
 #define Utau (1.0/tau)
 #define UmUtau (1.0-Utau)
+
+#endif
