@@ -1,9 +1,9 @@
-#include"LB_D3Q19.h"
+#include"Fluids_LB_D3Q19.h"
 
 std::string filename(int t);
 
 int main(void){
-    LatticeBoltzmann Bogota;
+    Fluids Bogota;
     int t_max = 1000;
     double rho0 = 1.0, v = 0.1;
 
