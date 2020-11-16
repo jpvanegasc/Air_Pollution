@@ -29,6 +29,12 @@
 #define y_mult (Lz*Q)
 #define z_mult Q
 
+/**
+ * Transform from 3D notation to 1D notation 
+ * @return 1D macro-coordinate on array
+ */
+#define get_1D(ix, iy, iz) ((ix*x_mult) + (iy*y_mult) + (iz*z_mult))
+
 // LB constants
 #define tau 0.55
 #define Utau (1.0/tau)

@@ -1,10 +1,5 @@
 #include"constants.h"
 
-/**
- * Transform from 3D notation to 1D notation 
- * @return 1D macro-coordinate on array
- */
-#define get_1D(ix, iy, iz) ((ix*x_mult) + (iy*y_mult) + (iz*z_mult))
 
 class Fluids{
     private:
