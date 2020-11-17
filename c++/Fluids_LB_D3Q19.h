@@ -8,7 +8,7 @@ class Fluids{
         int opposite_of[19] = {0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 18, 17};
     public:
         Fluids(void);
-        ~Fluids(void);
+        ~Fluids();
         double rho(int position);
         double Jx(int position);
         double Jy(int position);
@@ -57,11 +57,14 @@ Fluids::Fluids(void){
     f_new = new double[size];
 
     // eq function for fluids
-    #define f_eq(rho0, U_Vi, U_2, i) (rho0*w[i]*(1.0 + 3.0*U_Vi + 4.5*U_Vi*U_Vi - 1.5*U_2))
+    #ifndef FLUIDS_FEQ
+    #define FLUIDS_FEQ
+    #define fluids_f_eq(rho0, U_Vi, U_2, i) (rho0*w[i]*(1.0 + 3.0*U_Vi + 4.5*U_Vi*U_Vi - 1.5*U_2))
+    #endif
 }
 /* Free arrays memory */
-Fluids::~Fluids(void){
-    delete[] f; delete[] f_new;
+Fluids::~Fluids(){
+    delete[] f, f_new;
 }
 // density
 double Fluids::rho(int position){
@@ -127,7 +130,7 @@ void Fluids::collide(void){
 
                 for(int i=0; i<Q; i++){
                     double UdotVi = Ux0*V[0][i] + Uy0*V[1][i] + Uz0*V[2][i];
-                    f_new[pos + i] = UmUtau*f[pos + i] + Utau*f_eq(rho0, UdotVi, U2, i);
+                    f_new[pos + i] = UmUtau*f[pos + i] + Utau*fluids_f_eq(rho0, UdotVi, U2, i);
                 }
             }
 }
@@ -162,7 +165,7 @@ void Fluids::initialize(double rho0, double Ux0, double Uy0, double Uz0){
 
                 for(int i=0; i<Q; i++){
                     double UdotVi = Ux0*V[0][i] + Uy0*V[1][i] + Uz0*V[2][i];
-                    f[pos + i] = f_eq(rho0, UdotVi, U2, i);
+                    f[pos + i] = fluids_f_eq(rho0, UdotVi, U2, i);
                 }
             }
 }
@@ -179,7 +182,7 @@ void Fluids::impose_fields(double v){
                 for(int i=0; i<Q; i++){
                     double UdotVi = v*V[0][i];
                     double v2 = v*v;
-                    f_new[pos + i] = f_eq(rho0, UdotVi, v2, i);
+                    f_new[pos + i] = fluids_f_eq(rho0, UdotVi, v2, i);
                 }
         }
 }
