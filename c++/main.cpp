@@ -1,21 +1,24 @@
 #include"Fluids_LB_D3Q19.h"
+#include"Diffusion_LB_D3Q19.h"
 
 std::string filename(int t);
 
 int main(void){
-    Fluids Bogota;
-    int t_max = 1000;
+    // Fluids Bogota;
+    Diffusion Bogota;
+    int t_max = 500;
     double rho0 = 1.0, v = 0.1;
 
     Bogota.initialize(rho0, 0, 0, 0);
+    Bogota.save_2D("diffusion_initial.txt", Lz/2, v);
 
     for(int t=0; t<t_max; t++){
         Bogota.collide();
-        Bogota.impose_fields(v);
+        //Bogota.impose_fields(v);
         Bogota.propagate();
     }
 
-    Bogota.save_2D(filename(1), 10, v);
+    Bogota.save_2D("diffusion_final.txt", Lz/2, v);
 
     return 0;
 }
