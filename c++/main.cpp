@@ -4,21 +4,21 @@
 std::string filename(int t);
 
 int main(void){
-    // Fluids Bogota;
-    Diffusion Bogota;
-    int t_max = 500;
+    //Fluids Boltzmann;
+    Diffusion Boltzmann;
+    int t_max = 1000;
     double rho0 = 1.0, v = 0.1;
 
-    Bogota.initialize(rho0, 0, 0, 0);
-    Bogota.save_2D("diffusion_initial.txt", Lz/2, v);
+    Boltzmann.initialize(rho0, 0, 0, 0);
+    Boltzmann.save_2D("initial.txt", Lz/2, v);
 
     for(int t=0; t<t_max; t++){
-        Bogota.collide();
-        //Bogota.impose_fields(v);
-        Bogota.propagate();
+        Boltzmann.collide();
+        //Boltzmann.impose_fields(v);
+        Boltzmann.propagate();
     }
 
-    Bogota.save_2D("diffusion_final.txt", Lz/2, v);
+    Boltzmann.save_2D("final.txt", Lz/2, v);
 
     return 0;
 }
