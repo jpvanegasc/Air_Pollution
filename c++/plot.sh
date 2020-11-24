@@ -27,6 +27,14 @@ if [ "$map" = true ]; then
     echo "gnuplot file built"
 fi
 
+if [ "$vector2d" = true ]; then
+    rm plot.gnu
+    echo "set term png" >> "plot.gnu"
+    echo "set output '$output_file'" >> "plot.gnu"
+    echo "plot '$file_to_plot' w vec" >> "plot.gnu"
+    echo "gnuplot file built"
+fi
+
 # With time I'll add the other options...
 
 if [ "$run" = true ]; then
