@@ -1,12 +1,11 @@
+#ifndef __AIR_POLLUTION_CPP_CONSTANTS_H
+#define __AIR_POLLUTION_CPP_CONSTANTS_H
+
 #include<iostream>
 #include<cmath>
 #include<fstream>
 #include<string>
 #include<sstream>
-
-
-#ifndef AIR_POLLUTION_CPP_CONSTANTS_H
-#define AIR_POLLUTION_CPP_CONSTANTS_H
 
 // Geometry
 #define Lx 256

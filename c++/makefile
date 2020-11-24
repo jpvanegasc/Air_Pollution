@@ -1,11 +1,16 @@
+# Useful flags
 DEBUG = -g -Wall -fsanitize=address -fsanitize=leak -fsanitize=undefined
 VAL = --track-origins=yes --leak-check=full
 CACH = --tool=cachegrind
 C_STD = -std=c++11
-all : main.o
 
-main.o : main.cpp *.h
-	g++ $(C_STD) -O2 $< -o $@
+# Dependecies
+DEPS = Fluids_LB_D3Q19.cpp Diffusion_LB_D3Q19.cpp
+
+all : main.o 
+
+main.o : main.cpp $(DEPS) *.h
+	g++ $(C_STD) -O2 $< $(DEPS) -o $@
 	time ./$@
 
 .PHONY : assembler

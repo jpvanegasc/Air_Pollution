@@ -2,7 +2,7 @@
 ## Compilation
 All code must be compiled using c++11. A standard compilation would be 
 ```bash
-g++ -std=c++11 main.cpp
+g++ -std=c++11 main.cpp Fluids_LB_D3Q19.cpp Diffusion_LB_D3Q19.cpp
 ```
 Also some of the code is parallelized using openmp, so in order to use this feature you 
 would need to include an extra flag, like this:
