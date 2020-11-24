@@ -1,21 +1,13 @@
-# Air Pollution Lattice Boltzmann
-Computational Fluid Dynamics model of difusing pollutants over a city block.
+# Lattice Boltzmann Project
 
-## Author
-* Juan Pablo Vanegas Correa. Contact: jpvanegasc@unal.edu.co.
-
-## Acknowlegements
-* Jose Daniel Muñoz
-* Pierre Sagaut
-
-## References
-* Wind comfort assessment by means of large eddy simulation with lattice Boltzmann method in full scale city area
+This is the repository for all LB basic code I use in other projects. Its main purpose is to allow me to focus on the developing better Lattice Boltzmann code, while not interfering with other projects main developing objectives
 
 ## Notes on Programming Languages
-This project was built primary on C++ and CUDA. C++ was used primarily to make small developments and 
-test its functionality. CUDA is intended for simulating bigger systems, and the main results from this work are intended to come from the CUDA module.
-Just for fun I've included a Lattice-Boltzmann developed in FORTRAN, but It's not my priority to 
+This project was built primary on C++ and CUDA. C++ was used primarily to make small, day to day developments, and test its functionality. CUDA is intended for simulating bigger systems, and obtaining results. Just for fun I've included a Lattice-Boltzmann developed in FORTRAN, but It's not my priority to 
 reproduce results using it.
 
 Programming languages are divided by folders, and each one of them has 
 a different README with its respective compilation guide.
+
+## Timeline
+* 11-2020: Copy from "Air Pollution" repo
