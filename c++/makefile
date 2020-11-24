@@ -5,7 +5,7 @@ CACH = --tool=cachegrind
 C_STD = -std=c++11
 
 # Dependecies
-DEPS = Fluids_LB_D3Q19.cpp Diffusion_LB_D3Q19.cpp
+DEPS = LB_D3Q19.cpp Fluids_LB_D3Q19.cpp Diffusion_LB_D3Q19.cpp
 
 all : main.o 
 
@@ -14,45 +14,43 @@ main.o : main.cpp $(DEPS) *.h
 	time ./$@
 
 .PHONY : assembler
-assembler : main.cpp *.h
-	gcc $(C_STD) -g -o main.S -S main.cpp
+assembler : main.cpp $(DEPS) *.h
+	gcc $(C_STD) -g -S main.cpp $(DEPS) -o main.S
 
 .PHONY : parallel
 parallel : main.cpp
-	g++ $(C_STD) -fopenmp -O2 $<
+	g++ $(C_STD) -fopenmp -O2 $< $(DEPS) 
 	time ./a.out
 
 .PHONY : debug
 debug : main.cpp
-	g++ $(C_STD) $(DEBUG) $<
+	g++ $(C_STD) $(DEBUG) $< $(DEPS) 
 	./a.out
 
 .PHONY : valgrind
 valgrind : main.cpp
-	g++ $(C_STD) -g $<
+	g++ $(C_STD) -g $< $(DEPS) 
 	valgrind $(VAL) ./a.out
 
 .PHONY : cachegrind
 cachegrind : main.cpp
-	g++ $(C_STD) -g $<
+	g++ $(C_STD) -g $< $(DEPS) 
 	valgrind $(CACH) ./a.out
 
 .PHONY : gprof
 gprof : main.cpp
-	g++ $(C_STD) -Wall -pg $<
+	g++ $(C_STD) -Wall -pg $< $(DEPS) 
 	./a.out
 	gprof a.out gmon.out > analysis.txt
 	most analysis.txt
 
 .PHONY : perf
 perf : main.cpp
-	g++ $(C_STD) -Wall -pg $<
+	g++ $(C_STD) -Wall -pg $< $(DEPS) 
 	perf record ./a.out ; perf report
 
 .PHONY : clean
 clean :
 	rm -f *.o *.txt *.out* debug main *.data
 
-.PHONY : plot
-plot : data.txt
-	gnuplot plot.gp
+
