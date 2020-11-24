@@ -1,7 +1,6 @@
-#ifndef __AIR_POLLUTION_CPP_DIFFUSION_LB_D3Q19_H
-#define __AIR_POLLUTION_CPP_DIFFUSION_LB_D3Q19_H
+#ifndef __LB_CPP_DIFFUSION_LB_D3Q19_H
+#define __LB_CPP_DIFFUSION_LB_D3Q19_H
 
-#include "constants.h"
 #include "LB_D3Q19.h"
 
 #define c_s 0.5773502692 // = 1/sqrt(3)

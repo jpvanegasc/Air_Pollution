@@ -1,7 +1,6 @@
-#ifndef __AIR_POLLUTION_CPP_FLUIDS_LB_D3Q19_H
-#define __AIR_POLLUTION_CPP_FLUIDS_LB_D3Q19_H
+#ifndef __LB_CPP_FLUIDS_LB_D3Q19_H
+#define __LB_CPP_FLUIDS_LB_D3Q19_H
 
-#include "constants.h"
 #include "LB_D3Q19.h"
 
 #undef f_eq
