@@ -1,15 +1,13 @@
 #include "LB_D3Q19.h"
 
-/** 
- * Initialize weights and basis vectors, allocate memory for arrays and define equilibrium function 
- * as preprocessor macro
- */
+/* Initialize weights and basis vectors, allocate memory for arrays. */
 LatticeBoltzmann::LatticeBoltzmann(void){
     // weights
     w[0] = 1.0/3.0;
     w[1] = w[2] = w[3] = w[4] = w[5] = w[6] = 1.0/18.0;
     w[7] = w[8] = w[9] = w[10] = w[11] = w[12] = 1.0/36.0;
     w[13] = w[14] = w[15] = w[16] = w[17] = w[18] = 1.0/36.0;
+
     // basis vectors
     V[0][0]=0; //x
     V[1][0]=0; //y
@@ -32,12 +30,12 @@ LatticeBoltzmann::LatticeBoltzmann(void){
     f_new = new double[size];
 }
 
-/* Free arrays memory */
+/* Free memory */
 LatticeBoltzmann::~LatticeBoltzmann(){
     delete[] f; delete[] f_new;
 }
 
-// density
+/* System density */
 double LatticeBoltzmann::rho(int position){
     double r = 0; int i = 0;
 
@@ -67,7 +65,7 @@ double LatticeBoltzmann::rho(int position){
     return r;
 }
 
-// U_x * rho
+/* Velocity field in the x axis, times the density. (i.e., U_x * rho) */
 double LatticeBoltzmann::Jx(int position){
     double J_x = 0; int i = 1;
 
@@ -95,7 +93,7 @@ double LatticeBoltzmann::Jx(int position){
     return J_x;
 }
 
-// U_y * rho
+/* Velocity field in the y axis, times the density. (i.e., U_y * rho) */
 double LatticeBoltzmann::Jy(int position){
     double J_y = 0; int j = 1;
 
@@ -123,7 +121,7 @@ double LatticeBoltzmann::Jy(int position){
     return J_y;
 }
 
-// U_z * rho
+/* Velocity field in the z axis, times the density. (i.e., U_z * rho) */
 double LatticeBoltzmann::Jz(int position){
     double J_z = 0; int k = 1;
 
