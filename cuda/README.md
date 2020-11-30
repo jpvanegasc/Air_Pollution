@@ -1,4 +1,4 @@
-# CUDA Air Pollution Lattice Boltzmann
+# CUDA Lattice Boltzmann
 ## Compilation
 Code must be compiled using the nvcc compiler. A standard compilation would be 
 ```bash

@@ -1,4 +1,4 @@
-# C++ Air Pollution Lattice Boltzmann
+# C++ Lattice Boltzmann
 ## Compilation
 All code must be compiled using c++11. A standard compilation would be 
 ```bash

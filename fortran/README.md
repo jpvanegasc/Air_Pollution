@@ -1,4 +1,4 @@
-# Fortran Air Pollution Lattice Boltzmann
+# Fortran Lattice Boltzmann
 ## Compilation
 All code must be compiled using f95. A standard compilation would be
 ```bash
