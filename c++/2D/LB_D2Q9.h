@@ -1,5 +1,5 @@
-#ifndef __LB_CPP_LB_D2Q19_H
-#define __LB_CPP_LB_D2Q19_H
+#ifndef __LB_CPP_LB_D2Q9_H
+#define __LB_CPP_LB_D2Q9_H
 
 #include<iostream>
 #include<cmath>
@@ -16,7 +16,6 @@
 // Obstacle
 #define Lx3 (Lx/3)
 #define Ly3 (Ly/3)
-#define Lz2 (Lz/2)
 
 #define T_Lx3 (2*Lx/3)
 #define T_Ly3 (2*Ly/3)
@@ -49,8 +48,6 @@ class LatticeBoltzmann{
         double Jy(int position);
         double Jx_new(int ix, int iy);
         double Jy_new(int ix, int iy);
-        void save(std::string filename, double v);
-        void print(double v);
 };
 
 #endif
