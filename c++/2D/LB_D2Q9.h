@@ -47,10 +47,8 @@ class LatticeBoltzmann{
         double rho(int position);
         double Jx(int position);
         double Jy(int position);
-        double Jz(int position);
         double Jx_new(int ix, int iy);
         double Jy_new(int ix, int iy);
-        double Jz_new(int ix, int iy);
         void save(std::string filename, double v);
         void print(double v);
 };
