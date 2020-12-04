@@ -16,6 +16,7 @@ class Fluids : public LatticeBoltzmann{
         void propagate(void);
         void initialize(double rho0, double Ux0, double Uy0, double Uz0);
         void impose_fields(double v);
+        double detector(int x_pos);
         void save(std::string filename, double v);
         void save_2D(std::string filename, int z_pos, double v);
         void print(double v);
