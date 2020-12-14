@@ -1,5 +1,52 @@
 #include "Fluids_LB_D3Q19.h"
 
+
+void Fluids::stream_collide(void){
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lz; iz++){
+                double f_temp[Q] = {0};
+
+                for(int i=0; i<Q; i++){
+                    int x = (Lx + ix + V[0][i])%Lx, y = (Ly + iy + V[1][i])%Ly, z = (Lz + iz + V[2][i])%Lz;
+
+                    // Boundary conditions by halfway bounce back...
+
+                    int streamed_pos = get_1D(x, y, z);
+                    f_temp[i] = f[streamed_pos + i];
+                }
+
+                int pos = get_1D(ix, iy, iz);
+
+                // rho
+                double rho0 = 0.0;
+                for(int i=0; i<Q; i++) rho0 += f_temp[i];
+                // ===
+                // Ux
+                double Ux = 0.0;
+                for(int i=0; i<Q; i++) Ux += f_temp[i]*V[0][i];
+                Ux /= rho0;
+                // ===
+                // Uy
+                double Uy = 0.0;
+                for(int i=0; i<Q; i++) Uy += f_temp[i]*V[1][i];
+                Uy /= rho0;
+                // ===
+                // Uz
+                double Uz = 0.0;
+                for(int i=0; i<Q; i++) Uz += f_temp[i]*V[2][i];
+                Uz /= rho0;
+                // ===
+
+                double U2 = Ux*Ux + Uy*Uy + Uz*Uz;
+
+                for(int i=0; i<Q; i++){
+                    double UdotVi = Ux*V[0][i] + Uy*V[1][i] + Uz*V[2][i];
+                    f_new[pos + i] = UmUtau*f[pos + i] + Utau*f_eq(rho0, UdotVi, U2, i);
+                }
+            }
+}
+
 void Fluids::collide(void){
     double rho0, Ux0, Uy0, Uz0; int pos;
     for(int ix=0; ix<Lx; ix++)
