@@ -5,7 +5,7 @@ CACH = --tool=cachegrind
 C_STD = -std=c++11
 
 # Dependecies
-DEPS = LB_D2Q9.cpp Fluids_LB_D2Q9.cpp Diffusion_LB_D2Q9.cpp
+DEPS = LB_D2Q9.cpp
 
 all : main.o 
 

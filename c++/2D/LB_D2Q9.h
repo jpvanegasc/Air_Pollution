@@ -1,3 +1,6 @@
+/**
+ * LB_D2Q9.h
+ */
 #ifndef __LB_CPP_LB_D2Q9_H
 #define __LB_CPP_LB_D2Q9_H
 
@@ -7,18 +10,14 @@
 #include<string>
 #include<sstream>
 
+#include "constants.h"
+
 // Geometry
-#define Lx 256
-#define Ly 64
 #define D 2
 #define Q 9
 
-// Obstacle
-#define Lx3 (Lx/3)
-#define Ly3 (Ly/3)
-
-#define T_Lx3 (2*Lx/3)
-#define T_Ly3 (2*Ly/3)
+// #define C_S ... // speed of sound c_s = 1/std::sqrt(3)
+// #define C_S2 0.33333
 
 // 2D to 1D
 #define size (Lx*Ly*Q)
@@ -31,21 +30,28 @@
  */
 #define get_1D(ix, iy) ((ix*x_mult) + (iy*y_mult))
 
-// LB constants
-#define tau 0.55
-#define Utau (1.0/tau)
-#define UmUtau (1.0-Utau)
+// #undef f_eq
 
-class LatticeBoltzmann{
-    protected:
+// #if LB_TYPE == FLUIDS
+// #define f_eq() ()
+// #endif
+
+class LatticeBoltzmann2D{
+    private:
         double w[Q]; int V[D][Q];
-        double *f = NULL, *f_new = NULL;
+        double *f = NULL;
+
+        // #if EVOLUTION_ALGORITHM == TWO_STEP
+        double *f_new = NULL;
+        // #endif
     public:
-        LatticeBoltzmann(void);
-        ~LatticeBoltzmann();
+        LatticeBoltzmann2D(void);
+        ~LatticeBoltzmann2D();
+
         double rho(int position);
         double Jx(int position);
         double Jy(int position);
+
         double Jx_new(int ix, int iy);
         double Jy_new(int ix, int iy);
 };
