@@ -9,11 +9,13 @@
 #define Lz 64
 
 #define tau 0.55
+#define o_tau (1.0/tau)
+#define o_m_o_tau (1.0 - o_tau)
 
-// Other contants...
+// ...
 
-// #define LB_TYPE FLUIDS
+#define LB_TYPE FLUIDS
 
-// #define EVOLUTION_ALGORITHM TWO_STEP
+#define EVOLUTION_ALGORITHM TWO_STEP
 
-#endif
+#endif // __LB_D3Q19_CONSTANTS_H
