@@ -1,22 +1,22 @@
 #!/bin/bash
 
 # Gnuplot script generator
-
+#
 # Arguments:
 #     f: file to plot
 #     o: output file name
-
-#     s: scatter plor
+#
+#     s: scatter plot
 #     m: 2D heat map
 #     v: 2D vector plot
 #     V: 3D vector plot
 #     M: 2D heat map & vector plot
-
+#
 #     r: don't run the gnuplot script
-
+#
 # Usage:
 #     bash plot.sh -f file_to_plot.csv -o output_file.png [flags]
-
+#
 # Author: Juan Vanegas. Git: jpvanegasc
 
 
