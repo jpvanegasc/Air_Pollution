@@ -34,7 +34,7 @@ void LatticeBoltzmann3D::stream(void){
                     unsigned int y = iy + V[1][i];
                     unsigned int z = iz + V[2][i];
 
-                    if( // Walls by halfway bounce back
+                    if ( // Walls by halfway bounce back
                         (x > Lx-1) || (y > Ly-1) || (z > Lz-1)
                     ){
                         f_new[pos + opposite_of[i]] = f[pos+i];
@@ -209,6 +209,79 @@ double LatticeBoltzmann3D::Jz(int position){
     J_z += f[position + 18];
 
     return J_z;
+}
+
+void LatticeBoltzmann3D::save(std::string filename, double mult){
+    std::ofstream file(filename);
+
+    for(int ix=0; ix<Lx; ix+=mult){
+        for(int iy=0; iy<Ly; iy+=mult){
+            for(int iz=0; iz<Lz; iz+=mult){
+                unsigned int pos = get_1D(ix, iy, iz);
+
+                double rho0 = rho(pos);
+                double Ux = Jx(pos)/rho0;
+                double Uy = Jy(pos)/rho0;
+                double Uz = Jz(pos)/rho0;
+
+                file << ix << ',' << iy << ',' << iz << ',' << mult*Ux << ',' << mult*Uy << ',' << mult*Uz << '\n';
+            }
+            file << '\n';
+        }
+        file << '\n';
+    }
+
+    file.close();
+}
+
+// Saves a 2D view from a fixed x position
+void LatticeBoltzmann3D::save_2D(std::string filename, int pos, bool x, bool y, bool z, double mult){
+    std::ofstream file(filename);
+
+    if (x){
+        for(int iy=0; iy<Ly; iy+=mult){
+            for(int iz=0; iz<Lz; iz+=mult){
+                unsigned int pos = get_1D(pos, iy, iz);
+
+                double rho0 = rho(pos);
+                double Uy = Jy(pos)/rho0;
+                double Uz = Jz(pos)/rho0;
+
+                file << iy << ',' << iz << ',' << mult*Uy << ',' << mult*Uz << ',' << rho0 << '\n';
+            }
+            file << '\n';
+        }
+    }
+    else if (y){
+        for(int ix=0; ix<Lx; ix+=mult){
+            for(int iz=0; iz<Lz; iz+=mult){
+                unsigned int pos = get_1D(ix, pos, iz);
+
+                double rho0 = rho(pos);
+                double Ux = Jx(pos)/rho0;
+                double Uz = Jz(pos)/rho0;
+
+                file << ix << ',' << iz << ',' << mult*Ux << ',' << mult*Uz << ',' << rho0 << '\n';
+            }
+            file << '\n';
+        }
+    }
+    else if (z){
+        for(int ix=0; ix<Lx; ix+=mult){
+            for(int iy=0; iy<Ly; iy+=mult){
+                unsigned int pos = get_1D(ix, iy, pos);
+
+                double rho0 = rho(pos);
+                double Ux = Jx(pos)/rho0;
+                double Uy = Jy(pos)/rho0;
+
+                file << ix << ',' << iy << ',' << mult*Ux << ',' << mult*Uy << ',' << rho0 << '\n';
+            }
+            file << '\n';
+        }
+    }
+
+    file.close();
 }
 
 #if EVOLUTION_ALGORITHM == TWO_STEP

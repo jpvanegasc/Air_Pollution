@@ -106,6 +106,8 @@ class LatticeBoltzmann2D{
         double Jx(int position);
         double Jy(int position);
 
+        void save(std::string filename, double mult=1);
+
         double Jx_new(int ix, int iy);
         double Jy_new(int ix, int iy);
 };

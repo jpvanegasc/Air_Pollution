@@ -157,6 +157,26 @@ double LatticeBoltzmann2D::Jy(int position){
     return J_y;
 }
 
+void LatticeBoltzmann2D::save(std::string filename, double mult){
+    std::ofstream file(filename);
+
+    for(int ix=0; ix<Lx; ix+=mult){
+        for(int iy=0; iy<Ly; iy+=mult){
+            int pos = get_1D(ix, iy);
+
+            double rho0 = rho(pos);
+            double Ux0 = Jx(pos)/rho0;
+            double Uy0 = Jy(pos)/rho0;
+
+            file << ix << ',' << iy << ',' << mult*Ux0 << ',' << mult*Uy0 << ',' <<  rho0 << '\n';
+        }
+        file << '\n';
+    }
+    file << std::endl;
+    file.close();
+}
+
+
 #if EVOLUTION_ALGORITHM == TWO_STEP
 // Using f_new
 double LatticeBoltzmann2D::Jx_new(int ix, int iy){
