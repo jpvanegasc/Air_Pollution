@@ -96,9 +96,17 @@ class LatticeBoltzmann3D{
         double *f_new = NULL;
         #endif // EVOLUTION_ALGORITHM
 
+        int opposite_of[Q] = {0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 18, 17};
+
     public:
         LatticeBoltzmann3D(void);
         ~LatticeBoltzmann3D();
+
+        void initialize(void);
+
+        void collide(void);
+        void stream(void);
+        void evolve(void);
 
         double rho(int position);
         double Jx(int position);

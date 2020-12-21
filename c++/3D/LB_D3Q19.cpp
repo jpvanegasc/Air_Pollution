@@ -1,6 +1,82 @@
 #include "LB_D3Q19.h"
 
 
+void LatticeBoltzmann3D::collide(void){
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lz; iz++){
+                unsigned int pos = get_1D(ix, iy, iz);
+
+                double rho0 = rho(pos);
+
+                double Ux = Jx(pos)/rho0;
+                double Uy = Jy(pos)/rho0;
+                double Uz = Jz(pos)/rho0;
+
+                double U2 = Ux*Ux + Uy*Uy + Uz*Uz;
+
+                for(int i=0; i<Q; i++){
+                    double UdotVi = Ux*V[0][i] + Uy*V[1][i] + Uz*V[2][i];
+
+                    f_new[pos + i] = o_m_o_tau*f[pos + i] + o_tau*f_eq(rho0, UdotVi, U2, i);
+                }
+            }
+}
+
+void LatticeBoltzmann3D::stream(void){
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lz; iz++){
+                unsigned int pos = get_1D(ix, iy, iz);
+
+                for(int i=0; i<Q; i++){
+                    unsigned int x = ix + V[0][i];
+                    unsigned int y = iy + V[1][i];
+                    unsigned int z = iz + V[2][i];
+
+                    if( // Walls by halfway bounce back
+                        (x > Lx-1) || (y > Ly-1) || (z > Lz-1)
+                    ){
+                        f_new[pos + opposite_of[i]] = f[pos+i];
+                    }
+                    else{ // Fluid site
+                        unsigned int streamed_pos = get_1D(x, y, z);
+                        f[streamed_pos + i] = f_new[pos + i];
+                    }
+                }
+            }
+}
+
+// Initialize population using the mei et al. scheme
+void LatticeBoltzmann3D::initialize(void){
+    #define V0 0.0
+    #define rho0 1.0
+
+    // Load initial density
+    for(int ix=0; ix<Lx; ix++)
+        for(int iy=0; iy<Ly; iy++)
+            for(int iz=0; iz<Lz; iz++){
+                unsigned int pos = get_1D(ix, iy, iz);
+
+                for(int i=0; i<Q; i++) f[pos + i] = f_eq(rho0, V0, V0, i);
+            }
+    #undef rho0
+
+    // Collide & propagate just the density
+    #define STEPS 100
+    for(int t=0; t<STEPS; t++){
+        for(unsigned int pos=0; pos<SIZE; pos+=Q){
+            double rho0 = rho(pos);
+
+            for(int i=0; i<Q; i++) f_new[pos + i] = o_m_o_tau*f[pos + i] + o_tau*f_eq(rho0, V0, V0, i);
+        }
+        stream();
+    }
+    #undef V0
+    #undef STEPS
+}
+
+
 
 /**
  * Macroscopic quantities and utilities
