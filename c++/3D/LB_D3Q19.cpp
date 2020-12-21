@@ -235,13 +235,13 @@ void LatticeBoltzmann3D::save(std::string filename, double mult){
 }
 
 // Saves a 2D view from a fixed x position
-void LatticeBoltzmann3D::save_2D(std::string filename, int pos, bool x, bool y, bool z, double mult){
+void LatticeBoltzmann3D::save_2D(std::string filename, int position, bool x, bool y, bool z, double mult){
     std::ofstream file(filename);
 
     if (x){
         for(int iy=0; iy<Ly; iy+=mult){
             for(int iz=0; iz<Lz; iz+=mult){
-                unsigned int pos = get_1D(pos, iy, iz);
+                unsigned int pos = get_1D(position, iy, iz);
 
                 double rho0 = rho(pos);
                 double Uy = Jy(pos)/rho0;
@@ -255,7 +255,7 @@ void LatticeBoltzmann3D::save_2D(std::string filename, int pos, bool x, bool y, 
     else if (y){
         for(int ix=0; ix<Lx; ix+=mult){
             for(int iz=0; iz<Lz; iz+=mult){
-                unsigned int pos = get_1D(ix, pos, iz);
+                unsigned int pos = get_1D(ix, position, iz);
 
                 double rho0 = rho(pos);
                 double Ux = Jx(pos)/rho0;
@@ -269,7 +269,7 @@ void LatticeBoltzmann3D::save_2D(std::string filename, int pos, bool x, bool y, 
     else if (z){
         for(int ix=0; ix<Lx; ix+=mult){
             for(int iy=0; iy<Ly; iy+=mult){
-                unsigned int pos = get_1D(ix, iy, pos);
+                unsigned int pos = get_1D(ix, iy, position);
 
                 double rho0 = rho(pos);
                 double Ux = Jx(pos)/rho0;
