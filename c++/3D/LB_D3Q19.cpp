@@ -239,8 +239,8 @@ void LatticeBoltzmann3D::save_2D(std::string filename, int position, bool x, boo
     std::ofstream file(filename);
 
     if (x){
-        for(int iy=0; iy<Ly; iy+=mult){
-            for(int iz=0; iz<Lz; iz+=mult){
+        for(int iy=0; iy<Ly; iy+=(int)mult){
+            for(int iz=0; iz<Lz; iz+=(int)mult){
                 unsigned int pos = get_1D(position, iy, iz);
 
                 double rho0 = rho(pos);
@@ -253,8 +253,8 @@ void LatticeBoltzmann3D::save_2D(std::string filename, int position, bool x, boo
         }
     }
     else if (y){
-        for(int ix=0; ix<Lx; ix+=mult){
-            for(int iz=0; iz<Lz; iz+=mult){
+        for(int ix=0; ix<Lx; ix+=(int)mult){
+            for(int iz=0; iz<Lz; iz+=(int)mult){
                 unsigned int pos = get_1D(ix, position, iz);
 
                 double rho0 = rho(pos);
@@ -267,8 +267,8 @@ void LatticeBoltzmann3D::save_2D(std::string filename, int position, bool x, boo
         }
     }
     else if (z){
-        for(int ix=0; ix<Lx; ix+=mult){
-            for(int iy=0; iy<Ly; iy+=mult){
+        for(int ix=0; ix<Lx; ix+=(int)mult){
+            for(int iy=0; iy<Ly; iy+=(int)mult){
                 unsigned int pos = get_1D(ix, iy, position);
 
                 double rho0 = rho(pos);

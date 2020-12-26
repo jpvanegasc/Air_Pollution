@@ -160,8 +160,8 @@ double LatticeBoltzmann2D::Jy(int position){
 void LatticeBoltzmann2D::save(std::string filename, double mult){
     std::ofstream file(filename);
 
-    for(int ix=0; ix<Lx; ix+=mult){
-        for(int iy=0; iy<Ly; iy+=mult){
+    for(int ix=0; ix<Lx; ix+=(int)mult){
+        for(int iy=0; iy<Ly; iy+=(int)mult){
             int pos = get_1D(ix, iy);
 
             double rho0 = rho(pos);
