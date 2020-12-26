@@ -97,7 +97,7 @@ LatticeBoltzmann2D::LatticeBoltzmann2D(void){
     // f and f_new
     f = new double[SIZE];
 
-    #if EVOLUTION_ALGORITHM == TWO_STEP
+    #if EVOLUTION_ALGORITHM == 2
     f_new = new double[SIZE];
     #endif // EVOLUTION_ALGORITHM
 }
@@ -177,7 +177,7 @@ void LatticeBoltzmann2D::save(std::string filename, double mult){
 }
 
 
-#if EVOLUTION_ALGORITHM == TWO_STEP
+#if EVOLUTION_ALGORITHM == 2
 // Using f_new
 double LatticeBoltzmann2D::Jx_new(int ix, int iy){
     double J_x = 0; int pos = get_1D(ix, iy);

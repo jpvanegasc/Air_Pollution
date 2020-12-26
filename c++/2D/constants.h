@@ -13,8 +13,8 @@
 
 // ...
 
-#define LB_TYPE FLUIDS
+#define LB_TYPE 1
 
-#define EVOLUTION_ALGORITHM TWO_STEP
+#define EVOLUTION_ALGORITHM 2
 
 #endif // __LB_D2Q9_CONSTANTS_H

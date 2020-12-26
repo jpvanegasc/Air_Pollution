@@ -14,8 +14,8 @@
 
 // ...
 
-#define LB_TYPE FLUIDS
+#define LB_TYPE 2
 
-#define EVOLUTION_ALGORITHM TWO_STEP
+#define EVOLUTION_ALGORITHM 2
 
 #endif // __LB_D3Q19_CONSTANTS_H

@@ -7,8 +7,8 @@
  * constants.h requirements:
  * - Lx, Ly, Lz: Integers defining number of nodes in x, y and z, respectively
  * - tau, o_tau, o_m_o_tou: Doubles defining relaxation time tau, (1/tau) and (1 - 1/tau), respectiveley
- * - LB_TYPE: Either "FLUID" or "DIFFUSION". Defines if LB evaluates fluids or diffusion.
- * - EVOLUTION_ALGORITHM: Either "TWO_STEP" or "ONE_STEP". Defines if LB evolution is done in a single
+ * - LB_TYPE: Either 1 (fluids) or 2 (diffusion). Defines if LB evaluates fluids or diffusion.
+ * - EVOLUTION_ALGORITHM: Either 2 (two steps) or 1 (one step). Defines if LB evolution is done in a single
  *      step, with collision and streaming done in a single pass over the f array, or with collision
  *      and streaming having separate passes, respectiveley. Note: Two step evolution requires more 
  *      allocated memory than single step.
@@ -68,7 +68,7 @@
 // Equilibrium function
 #undef f_eq
 
-#if LB_TYPE == FLUIDS
+#if LB_TYPE == 1
 /**
  * Equilibrium function for fluids
  * @param rho: density at position.
@@ -77,7 +77,7 @@
  */
 #define f_eq(rho, U_Vi, U2, i) (rho*w[i]*(1.0 + 3.0*U_Vi + 4.5*U_Vi*U_Vi - 1.5*U2))
 
-#elif LB_TYPE == DIFFUSION
+#elif LB_TYPE == 2
 /**
  * Equilibrium function for diffusion
  * @param rho: density at position.
@@ -85,6 +85,7 @@
  * @param U2: velocity field U norm squared. (Not used for diffusion, you can pass any value here, so there's no need to actually calculate it).
  */
 #define f_eq(rho, U_Vi, U2, i) (rho*w[i]*(1.0 + U_Vi*O_C_S2))
+
 #endif // LB_TYPE
 
 class LatticeBoltzmann3D{
@@ -92,7 +93,7 @@ class LatticeBoltzmann3D{
         double w[Q]; int V[D][Q];
         double *f = NULL;
 
-        #if EVOLUTION_ALGORITHM == TWO_STEP
+        #if EVOLUTION_ALGORITHM == 2
         double *f_new = NULL;
         #endif // EVOLUTION_ALGORITHM
 
