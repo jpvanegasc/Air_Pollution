@@ -1,6 +1,6 @@
 #include<iostream>
 
-#include "LB_D3Q19.h"
+#include "D3Q19/LB_D3Q19.h"
 
 #define TMAX 100
 
