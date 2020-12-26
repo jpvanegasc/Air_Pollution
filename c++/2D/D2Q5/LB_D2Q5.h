@@ -7,13 +7,14 @@
  * constants.h requirements:
  * - Lx, Ly: Integers defining number of nodes in x and y, respectively
  * - tau, o_tau, o_m_o_tou: Doubles defining relaxation time tau, (1/tau) and (1 - 1/tau), respectiveley
+ * - LB_TYPE: Either 1 (diffusion) or 2 (waves). Defines if LB evaluates fluids or diffusion.
  * - EVOLUTION_ALGORITHM: Either 2 (two steps) or 1 (one step). Defines if LB evolution is done in a single
  *      step, with collision and streaming done in a single pass over the f array, or with collision
  *      and streaming having separate passes, respectiveley. Note: Two step evolution requires more 
  *      allocated memory than single step.
  */
-#ifndef __LB_CPP_LB_D2Q9_H
-#define __LB_CPP_LB_D2Q9_H
+#ifndef __LB_CPP_LB_D2Q5_H
+#define __LB_CPP_LB_D2Q5_H
 
 #include<iostream>
 #include<cmath>
@@ -25,12 +26,12 @@
 
 // Geometry
 #define D 2
-#define Q 9
+#define Q 5
 
-#define C_S 0.5773502691896258 // speed of sound c_s = 1/sqrt(3)
-#define C_S2 0.3333333333333333 // (c_s)^2
-#define O_C_S 1.7320508075688772 // (1/c_s)
-#define O_C_S2 3.0 // (1/c_s)^2
+#define C_S 0.5 // speed of sound c_s = 1/2
+#define C_S2 0.25 // (c_s)^2
+#define O_C_S 2.0 // (1/c_s)
+#define O_C_S2 4.0 // (1/c_s)^2
 
 
 // 2D to 1D
@@ -61,13 +62,29 @@
 // Equilibrium function
 #undef f_eq
 
+#if LB_TYPE == 1
 /**
- * Equilibrium function for fluids
+ * Equilibrium function for diffusion
  * @param rho: density at position.
  * @param U_Vi: velocity field U dot velocity vector V_i. (U . V_i).
- * @param U2: velocity field U norm squared.
  */
-#define f_eq(rho, U_Vi, U2, i) (rho*w[i]*(1.0 + 3.0*U_Vi + 4.5*U_Vi*U_Vi - 1.5*U2))
+#define f_eq(rho, U_Vi, i) (rho*w[i]*(1.0 + U_Vi*O_C_S2))
+
+#elif LB_TYPE == 2
+/**
+ * Equilibrium function for waves, index 0
+ * @param rho: density at position.
+ * @param U_Vi: velocity field U dot velocity vector V_i. (U . V_i).
+ */
+#define f_eq0(rho) rho*0.5 (// f_eq, i=0 = rho*(1 - 3*C_S2*(1 - w[0]) )
+/**
+ * Equilibrium function for waves, other indexes
+ * @param rho: density at position.
+ * @param U_Vi: velocity field U dot velocity vector V_i. (U . V_i).
+ */
+#define f_eq(rho, J_Vi, i) (w[i]*(TresC2*rho0+3*(V[0][i]*Jx0+V[1][i]*Jy0)))
+
+#endif // LB_TYPE
 
 
 class LatticeBoltzmann2D{
@@ -101,4 +118,4 @@ class LatticeBoltzmann2D{
         double Jy_new(int ix, int iy);
 };
 
-#endif // __LB_CPP_LB_D2Q9_H
+#endif // __LB_CPP_LB_D2Q5_H
