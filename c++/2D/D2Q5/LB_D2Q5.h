@@ -34,31 +34,6 @@
 #define O_C_S2 4.0 // (1/c_s)^2
 
 
-// 2D to 1D
-#define SIZE (Lx*Ly*Q)
-#define X_MULT (Ly*Q)
-#define Y_MULT Q
-
-/**
- * Transform from 2D notation to 1D notation 
- * @return 1D macro-coordinate on array
- */
-#define get_1D(ix, iy) ((ix*X_MULT) + (iy*Y_MULT))
-
-
-// 1D to 2D
-/**
- * Transform from 1D notation to 2D notation
- * @return x coordinate
- */
-#define get_ix(index) (index/(X_MULT))
-/**
- * Transform from 1D notation to 2D notation
- * @return y coordinate
- */
-#define get_iy(index) ((index/Y_MULT)%Ly)
-
-
 // Equilibrium function
 #undef f_eq
 
@@ -117,5 +92,31 @@ class LatticeBoltzmann2D{
         double Jx_new(int ix, int iy);
         double Jy_new(int ix, int iy);
 };
+
+
+// 2D to 1D
+#define SIZE (Lx*Ly*Q)
+#define X_MULT (Ly*Q)
+#define Y_MULT Q
+
+/**
+ * Transform from 2D notation to 1D notation 
+ * @return 1D macro-coordinate on array
+ */
+#define get_1D(ix, iy) ((ix*X_MULT) + (iy*Y_MULT))
+
+
+// 1D to 2D
+/**
+ * Transform from 1D notation to 2D notation
+ * @return x coordinate
+ */
+#define get_ix(index) (index/(X_MULT))
+/**
+ * Transform from 1D notation to 2D notation
+ * @return y coordinate
+ */
+#define get_iy(index) ((index/Y_MULT)%Ly)
+
 
 #endif // __LB_CPP_LB_D2Q5_H

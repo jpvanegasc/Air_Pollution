@@ -34,37 +34,6 @@
 #define O_C_S2 4.0 // (1/c_s)^2
 
 
-// 3D to 1D
-#define SIZE (Lx*Ly*Lz*Q)
-#define X_MULT (Ly*Lz*Q)
-#define Y_MULT (Lz*Q)
-#define Z_MULT Q
-
-/**
- * Transform from 3D notation to 1D notation 
- * @return 1D macro-coordinate on array
- */
-#define get_1D(ix, iy, iz) ((ix*X_MULT) + (iy*Y_MULT) + (iz*Z_MULT))
-
-
-// 1D to 3D
-/**
- * Transform from 1D notation to 3D notation
- * @return y coordinate
- */
-#define get_iz(index) ((index/Z_MULT)%Lz)
-/**
- * Transform from 1D notation to 3D notation
- * @return y coordinate
- */
-#define get_iy(index) ( ((index - get_iz(index)*Z_MULT)/Y_MULT)%Ly )
-/**
- * Transform from 1D notation to 3D notation
- * @return x coordinate
- */
-#define get_ix(index) ( (pos - get_iy(pos)*Lz*Z_MULT - get_iz(pos)*Z_MULT)/X_MULT )
-
-
 // Equilibrium function
 #undef f_eq
 
@@ -126,5 +95,37 @@ class LatticeBoltzmann3D{
         double Jy_new(int ix, int iy, int iz);
         double Jz_new(int ix, int iy, int iz);
 };
+
+
+// 3D to 1D
+#define SIZE (Lx*Ly*Lz*Q)
+#define X_MULT (Ly*Lz*Q)
+#define Y_MULT (Lz*Q)
+#define Z_MULT Q
+
+/**
+ * Transform from 3D notation to 1D notation 
+ * @return 1D macro-coordinate on array
+ */
+#define get_1D(ix, iy, iz) ((ix*X_MULT) + (iy*Y_MULT) + (iz*Z_MULT))
+
+
+// 1D to 3D
+/**
+ * Transform from 1D notation to 3D notation
+ * @return y coordinate
+ */
+#define get_iz(index) ((index/Z_MULT)%Lz)
+/**
+ * Transform from 1D notation to 3D notation
+ * @return y coordinate
+ */
+#define get_iy(index) ( ((index - get_iz(index)*Z_MULT)/Y_MULT)%Ly )
+/**
+ * Transform from 1D notation to 3D notation
+ * @return x coordinate
+ */
+#define get_ix(index) ( (pos - get_iy(pos)*Lz*Z_MULT - get_iz(pos)*Z_MULT)/X_MULT )
+
 
 #endif // __LB_CPP_LB_D3Q7_H
