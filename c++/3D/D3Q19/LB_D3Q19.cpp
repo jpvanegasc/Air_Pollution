@@ -117,7 +117,10 @@ LatticeBoltzmann3D::LatticeBoltzmann3D(void){
 
 /* Free memory */
 LatticeBoltzmann3D::~LatticeBoltzmann3D(){
-    delete[] f; delete[] f_new;
+    delete[] f;
+    #if EVOLUTION_ALGORITHM == 2
+    delete[] f_new;
+    #endif // EVOLUTION_ALGORITHM
 }
 
 /* System density */

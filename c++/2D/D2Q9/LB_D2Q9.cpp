@@ -104,7 +104,10 @@ LatticeBoltzmann2D::LatticeBoltzmann2D(void){
 
 /* Free memory */
 LatticeBoltzmann2D::~LatticeBoltzmann2D(){
-    delete[] f; delete[] f_new;
+    delete[] f;
+    #if EVOLUTION_ALGORITHM == 2
+    delete[] f_new;
+    #endif // EVOLUTION_ALGORITHM
 }
 
 /* System density */
