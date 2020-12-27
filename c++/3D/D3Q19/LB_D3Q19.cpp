@@ -283,29 +283,3 @@ void LatticeBoltzmann3D::save_2D(std::string filename, int position, bool x, boo
 
     file.close();
 }
-
-#if EVOLUTION_ALGORITHM == 2
-// Using f_new
-double LatticeBoltzmann3D::Jx_new(int ix, int iy, int iz){
-    double J_x = 0; int pos = get_1D(ix, iy, iz);
-    for(int i=0; i<Q; i++)
-        J_x += f_new[pos + i] * V[0][i];
-    return J_x;
-}
-
-// Using f_new
-double LatticeBoltzmann3D::Jy_new(int ix, int iy, int iz){
-    double J_y = 0; int pos = get_1D(ix, iy, iz);
-    for(int j=0; j<Q; j++)
-        J_y += f_new[pos+j] * V[1][j];
-    return J_y;
-}
-
-// Using f_new
-double LatticeBoltzmann3D::Jz_new(int ix, int iy, int iz){
-    double J_z = 0; int pos = get_1D(ix, iy, iz);
-    for(int k=0; k<Q; k++)
-        J_z += f_new[pos+k] * V[2][k];
-    return J_z;
-}
-#endif // EVOLUTION_ALGORITHM

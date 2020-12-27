@@ -74,9 +74,6 @@ class LatticeBoltzmann3D{
         void save(std::string filename, double mult=1);
         void save_2D(std::string filename, int position, bool x=false, bool y=false, bool z=true, double mult=1);
 
-        double Jx_new(int ix, int iy, int iz);
-        double Jy_new(int ix, int iy, int iz);
-        double Jz_new(int ix, int iy, int iz);
 };
 
 
