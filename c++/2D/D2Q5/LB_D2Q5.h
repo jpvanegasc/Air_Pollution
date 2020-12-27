@@ -71,7 +71,7 @@ class LatticeBoltzmann2D{
         double *f_new = NULL;
         #endif // EVOLUTION_ALGORITHM
 
-        int opposite_of[Q] = {0, 3, 4, 1, 2, 7, 8, 5, 6};
+        int opposite_of[Q] = {0, 3, 4, 1, 2};
 
     public:
         LatticeBoltzmann2D(void);
