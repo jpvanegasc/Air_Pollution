@@ -80,9 +80,8 @@ void LatticeBoltzmann2D::initialize(void){
 /* Initialize weights and basis vectors, allocate memory for arrays. */
 LatticeBoltzmann2D::LatticeBoltzmann2D(void){
     // weights
-    w[0] = 4.0/9.0;
-    w[1] = w[2] = w[3] = w[4] = 1.0/9.0;
-    w[5] = w[6] = w[7] = w[8] = 1.0/36.0;
+    w[0] = 1.0/3.0;
+    w[1] = w[2] = w[3] = w[4] = 1.0/6.0;
 
     // basis vectors
     V[0][0]=0; //x
@@ -90,9 +89,6 @@ LatticeBoltzmann2D::LatticeBoltzmann2D(void){
 
     V[0][1]=1;   V[0][2]=0;   V[0][3]=-1;  V[0][4]=0;
     V[1][1]=0;   V[1][2]=1;   V[1][3]=0;   V[1][4]=-1;
-
-    V[0][5]=1;   V[0][6]=-1;  V[0][7]=-1;  V[0][8]=1;
-    V[1][5]=1;   V[1][6]=1;   V[1][7]=-1;  V[1][8]=-1;
 
     // f and f_new
     f = new double[SIZE];
@@ -121,11 +117,6 @@ double LatticeBoltzmann2D::rho(int position){
     r += f[position + 3];
     r += f[position + 4];
 
-    r += f[position + 5];
-    r += f[position + 6];
-    r += f[position + 7];
-    r += f[position + 8];
-
     return r;
 }
 
@@ -137,11 +128,6 @@ double LatticeBoltzmann2D::Jx(int position){
 
     J_x -= f[position + 3];
 
-    J_x += f[position + 5];
-    J_x -= f[position + 6];
-    J_x -= f[position + 7];
-    J_x += f[position + 8];
-
     return J_x;
 }
 
@@ -152,10 +138,6 @@ double LatticeBoltzmann2D::Jy(int position){
     J_y += f[position + 2];
 
     J_y -= f[position + 4];
-    J_y += f[position + 5];
-    J_y += f[position + 6];
-    J_y -= f[position + 7];
-    J_y -= f[position + 8];
 
     return J_y;
 }

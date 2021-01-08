@@ -85,10 +85,8 @@ void LatticeBoltzmann3D::initialize(void){
 /* Initialize weights and basis vectors, allocate memory for arrays. */
 LatticeBoltzmann3D::LatticeBoltzmann3D(void){
     // weights
-    w[0] = 1.0/3.0;
-    w[1] = w[2] = w[3] = w[4] = w[5] = w[6] = 1.0/18.0;
-    w[7] = w[8] = w[9] = w[10] = w[11] = w[12] = 1.0/36.0;
-    w[13] = w[14] = w[15] = w[16] = w[17] = w[18] = 1.0/36.0;
+    w[0] = 1.0/4.0;
+    w[1] = w[2] = w[3] = w[4] = w[5] = w[6] = 1.0/8.0;
 
     // basis vectors
     V[0][0]=0; //x
@@ -98,14 +96,6 @@ LatticeBoltzmann3D::LatticeBoltzmann3D(void){
     V[0][1]=1;   V[0][2]=-1;  V[0][3]=0;   V[0][4]=0;   V[0][5]=0;   V[0][6]=0;
     V[1][1]=0;   V[1][2]=0;   V[1][3]=1;   V[1][4]=-1;  V[1][5]=0;   V[1][6]=0;
     V[2][1]=0;   V[2][2]=0;   V[2][3]=0;   V[2][4]=0;   V[2][5]=1;   V[2][6]=-1;
-
-    V[0][7]=1;   V[0][8]=-1;  V[0][9]=1;   V[0][10]=-1;  V[0][11]=0;   V[0][12]=0;
-    V[1][7]=1;   V[1][8]=-1;  V[1][9]=0;   V[1][10]=0;   V[1][11]=1;   V[1][12]=-1;
-    V[2][7]=0;   V[2][8]=0;   V[2][9]=1;   V[2][10]=-1;  V[2][11]=1;   V[2][12]=-1;
-
-    V[0][13]=1;   V[0][14]=-1;  V[0][15]=1;   V[0][16]=-1;  V[0][17]=0;   V[0][18]=0;
-    V[1][13]=-1;  V[1][14]=1;   V[1][15]=0;   V[1][16]=0;   V[1][17]=1;   V[1][18]=-1;
-    V[2][13]=0;   V[2][14]=0;   V[2][15]=-1;  V[2][16]=1;   V[2][17]=-1;  V[2][18]=1;
 
     // f and f_new
     f = new double[SIZE];
@@ -136,20 +126,6 @@ double LatticeBoltzmann3D::rho(int position){
     r += f[position + 5];
     r += f[position + 6];
 
-    r += f[position + 7];
-    r += f[position + 8];
-    r += f[position + 9];
-    r += f[position + 10];
-    r += f[position + 11];
-    r += f[position + 12];
-
-    r += f[position + 13];
-    r += f[position + 14];
-    r += f[position + 15];
-    r += f[position + 16];
-    r += f[position + 17];
-    r += f[position + 18];
-
     return r;
 }
 
@@ -159,16 +135,6 @@ double LatticeBoltzmann3D::Jx(int position){
 
     J_x += f[position + 1];
     J_x -= f[position + 2];
-
-    J_x += f[position + 7];
-    J_x -= f[position + 8];
-    J_x += f[position + 9];
-    J_x -= f[position + 10];
-
-    J_x += f[position + 13];
-    J_x -= f[position + 14];
-    J_x += f[position + 15];
-    J_x -= f[position + 16];
 
     return J_x;
 }
@@ -180,17 +146,6 @@ double LatticeBoltzmann3D::Jy(int position){
     J_y += f[position + 3];
     J_y -= f[position + 4];
 
-    J_y += f[position + 7];
-    J_y -= f[position + 8];
-
-    J_y += f[position + 11];
-    J_y -= f[position + 12];
-    J_y -= f[position + 13];
-    J_y += f[position + 14];
-
-    J_y += f[position + 17];
-    J_y -= f[position + 18];
-
     return J_y;
 }
 
@@ -200,16 +155,6 @@ double LatticeBoltzmann3D::Jz(int position){
 
     J_z += f[position + 5];
     J_z -= f[position + 6];
-
-    J_z += f[position + 9];
-    J_z -= f[position + 10];
-    J_z += f[position + 11];
-    J_z -= f[position + 12];
-
-    J_z -= f[position + 15];
-    J_z += f[position + 16];
-    J_z -= f[position + 17];
-    J_z += f[position + 18];
 
     return J_z;
 }
