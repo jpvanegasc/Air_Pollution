@@ -49,13 +49,12 @@
 /**
  * Equilibrium function for waves, index 0
  * @param rho: density at position.
- * @param U_Vi: velocity field U dot velocity vector V_i. (U . V_i).
  */
 #define f_eq0(rho) (rho*0.5) // f_eq, i=0 = rho*(1 - 3*C_S2*(1 - w[0]) )
 /**
  * Equilibrium function for waves, other indexes
  * @param rho: density at position.
- * @param U_Vi: velocity field U dot velocity vector V_i. (U . V_i).
+ * @param J_Vi: momentum field J dot velocity vector V_i. (J . V_i).
  */
 #define f_eq(rho, J_Vi, i) (w[i]*(3*C_2*rho0 + 3*J_Vi))
 
