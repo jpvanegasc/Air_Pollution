@@ -56,7 +56,7 @@
  * @param rho: density at position.
  * @param J_Vi: momentum field J dot velocity vector V_i. (J . V_i).
  */
-#define f_eq(rho, J_Vi, i) (w[i]*(3*C_2*rho0 + 3*J_Vi))
+#define f_eq(rho, J_Vi, i) (w[i]*(3*C_S2*rho0 + 3*J_Vi))
 
 #endif // LB_TYPE
 
