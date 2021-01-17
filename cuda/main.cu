@@ -1,19 +1,17 @@
-#include"LB_D3Q19.h"
+#include<iostream>
+
+#include "2D/D2Q9/LB_D2Q9.h"
+#define TMAX 100
 
 int main(void){
-    LatticeBoltzmann Bogota;
-    int t_max = 10;
-    float v_wind = 0.1;
+    LatticeBoltzmann2D Fluids;
 
-    Bogota.initialize(1.0, 0, 0, 0);
+    Fluids.initialize();
 
-    for(int t=0; t<t_max; t++){
-        Bogota.collide();
-        Bogota.impose_fields(v_wind);
-        Bogota.propagate();
+    for(int t=0; t<TMAX; t++){
+        Fluids.collide();
+        Fluids.stream();
     }
-
-    Bogota.save("test.txt");
 
     return 0;
 }
