@@ -11,4 +11,5 @@ a different README with its respective compilation guide.
 
 ## Timeline
 * 11-2020: Copy from "Air Pollution" repo
-* 12-2020: Implement simplified modules
+* 12-2020: Implement simplified modules on c++
+* 01-2020: Implement simplified modules on CUDA
