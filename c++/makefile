@@ -19,35 +19,35 @@ assembler : main.cpp $(DEPS) *.h
 
 .PHONY : parallel
 parallel : main.cpp
-	g++ $(C_STD) -fopenmp -O2 $< $(DEPS) 
-	time ./a.out
+	g++ $(C_STD) -fopenmp -O2 $< $(DEPS) -o parallel.o
+	time ./parallel.o
 
 .PHONY : debug
 debug : main.cpp
-	g++ $(C_STD) $(DEBUG) $< $(DEPS) 
-	./a.out
+	g++ $(C_STD) $(DEBUG) $< $(DEPS) -o debug.o
+	debug.o
 
 .PHONY : valgrind
 valgrind : main.cpp
-	g++ $(C_STD) -g $< $(DEPS) 
-	valgrind $(VAL) ./a.out
+	g++ $(C_STD) -g $< $(DEPS) -o valgrind.o
+	valgrind $(VAL) ./valgrind.o
 
 .PHONY : cachegrind
 cachegrind : main.cpp
-	g++ $(C_STD) -g $< $(DEPS) 
-	valgrind $(CACH) ./a.out
+	g++ $(C_STD) -g $< $(DEPS) -o cachegrind.o
+	valgrind $(CACH) ./cachegrind.o
 
 .PHONY : gprof
 gprof : main.cpp
-	g++ $(C_STD) -Wall -pg $< $(DEPS) 
-	./a.out
-	gprof a.out gmon.out > analysis.txt
+	g++ $(C_STD) -Wall -pg $< $(DEPS) -o gprof.o
+	./gprof.o
+	gprof gprof.o gmon.out > analysis.txt
 	most analysis.txt
 
 .PHONY : perf
 perf : main.cpp
-	g++ $(C_STD) -Wall -pg $< $(DEPS) 
-	perf record ./a.out ; perf report
+	g++ $(C_STD) -Wall -pg $< $(DEPS) -o perf.o
+	perf record ./perf.o ; perf report
 
 .PHONY : clean
 clean :
