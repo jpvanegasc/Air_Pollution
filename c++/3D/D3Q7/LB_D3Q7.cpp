@@ -129,7 +129,7 @@ double LatticeBoltzmann3D::rho(int position){
     return r;
 }
 
-/* Velocity field in the x axis, times the density. (i.e., U_x * rho) */
+/* Momentum field in the x axis. (i.e., U_x * rho) */
 double LatticeBoltzmann3D::Jx(int position){
     double J_x = 0;
 
@@ -139,7 +139,7 @@ double LatticeBoltzmann3D::Jx(int position){
     return J_x;
 }
 
-/* Velocity field in the y axis, times the density. (i.e., U_y * rho) */
+/* Momentum field in the y axis. (i.e., U_y * rho) */
 double LatticeBoltzmann3D::Jy(int position){
     double J_y = 0;
 
@@ -149,7 +149,7 @@ double LatticeBoltzmann3D::Jy(int position){
     return J_y;
 }
 
-/* Velocity field in the z axis, times the density. (i.e., U_z * rho) */
+/* Momentum field in the z axis. (i.e., U_z * rho) */
 double LatticeBoltzmann3D::Jz(int position){
     double J_z = 0;
 

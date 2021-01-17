@@ -129,7 +129,7 @@ double LatticeBoltzmann2D::rho(int position){
     return r;
 }
 
-/* Velocity field in the x axis, times the density. (i.e., U_x * rho) */
+/* Momentum field in the x axis. (i.e., U_x * rho) */
 double LatticeBoltzmann2D::Jx(int position){
     double J_x = 0;
 
@@ -145,7 +145,7 @@ double LatticeBoltzmann2D::Jx(int position){
     return J_x;
 }
 
-/* Velocity field in the y axis, times the density. (i.e., U_y * rho) */
+/* Momentum field in the y axis. (i.e., U_y * rho) */
 double LatticeBoltzmann2D::Jy(int position){
     double J_y = 0;
 
