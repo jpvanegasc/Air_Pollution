@@ -1,6 +1,6 @@
 #include<iostream>
 
-#include "D2Q9/LB_D2Q9.h"
+#include "2D/D2Q9/LB_D2Q9.h"
 #define TMAX 100
 
 int main(void){
