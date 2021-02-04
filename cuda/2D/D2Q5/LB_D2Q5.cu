@@ -18,7 +18,7 @@ __global__ void d_collide(float *d_f, float *d_f_new){
 
 __global__ void d_stream(float *d_f, float *d_f_new){
     unsigned int ix = threadIdx.x, iy = threadIdx.y;
-    unsigned int pos_new = get_1D(ix, iy, iz);
+    unsigned int pos = get_1D(ix, iy);
 
     for(int i=0; i<Q; i++){
         unsigned int x = ix + V[0][i];
@@ -133,7 +133,7 @@ LatticeBoltzmann2D::LatticeBoltzmann2D(void){
     cudaMemcpyToSymbol(d_w, w, Q*sizeof(float), 0, cudaMemcpyHostToDevice);
     cudaMemcpyToSymbol(d_Vx, V[0], Q*sizeof(int), 0, cudaMemcpyHostToDevice);
     cudaMemcpyToSymbol(d_Vy, V[1], Q*sizeof(int), 0, cudaMemcpyHostToDevice);
-    cudaMemcpyToSymbol(d_opposite_of, d_opposite_of, Q*sizeof(int), 0, cudaMemcpyHostToDevice);
+    cudaMemcpyToSymbol(d_opposite_of, opposite_of, Q*sizeof(int), 0, cudaMemcpyHostToDevice);
 }
 
 /* Free memory */
